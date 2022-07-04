@@ -28,9 +28,14 @@ namespace HRM
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+            services.AddCors(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HRM", Version = "v1" });
+                options.AddPolicy("_myAllowSpecificOrigins",
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                    //builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+                });
             });
         }
 
@@ -40,8 +45,6 @@ namespace HRM
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HRM v1"));
             }
 
             app.UseHttpsRedirection();
@@ -49,6 +52,8 @@ namespace HRM
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("_myAllowSpecificOrigins");
 
             app.UseEndpoints(endpoints =>
             {

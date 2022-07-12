@@ -3,7 +3,8 @@ from flask import jsonify, request, Response
 from src.Models import employee
 import json
 
-@app.route('/employee', methods=['GET'])
+@app.route('/employee/information', methods=['GET'])
 def employeeDetail():
-   data = employee.employeeInfor()
-   return jsonify([e.getEmployee() for e in data])
+   employeeId = request.args.get('employeeId')
+   data = employee.employeeInfor(employeeId)
+   return jsonify([e.getInformation() for e in data])

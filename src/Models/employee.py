@@ -32,6 +32,14 @@ class Employee:
             'position':self.position,
             'active':self.active
         }
+    def updateInformation(self, id, firstname, lastname, idDepartment, position, dayOfBirth, gender, email, phoneNumber, address, maritalStatus):
+        conn = connectDatabase.connect()
+        cursor = conn.cursor()
+        procedure = 'UpdateEmployeeById'
+        cursor.callproc(procedure, [id, firstname, lastname, idDepartment, position, dayOfBirth, gender, email, phoneNumber, address, maritalStatus,])
+        cursor.close()
+        conn.close()
+        return
 
 class EmployeeManager(Employee):
     manager_idEmployee = ''

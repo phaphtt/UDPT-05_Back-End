@@ -1,7 +1,7 @@
 from src import app
 from flask import jsonify, request, Response
 from src.Models import employee
-import json
+from src.Models import employee_task
 
 @app.route('/employee/information', methods=['GET'])
 def employeeDetail():
@@ -27,3 +27,9 @@ def employeeUpdate():
    return {
       'message':'Cập nhật thành công'
    }
+
+@app.route('/employee/listtask', methods=['GET'])
+def employeeListTask():
+   idEmployee = request.args.get('idEmployee')
+   data = employee_task.listTask(idEmployee)
+   return jsonify([t.getTaskEmployee() for t in data])

@@ -11,7 +11,7 @@ def employeeDetail():
    data = employee.employeeInfor(idEmployee)
    return jsonify(data.getInformation())
 
-@app.route('/employee/update', methods=['POST'])
+@app.route('/employee/update', methods=['PUT'])
 def employeeUpdate():
    id = request.json['id']
    firstname = request.json['firstname']
@@ -26,8 +26,7 @@ def employeeUpdate():
    maritalStatus = request.json['maritalStatus']
    Emp = employee.Employee()
    Emp.updateInformation(id, firstname, lastname, idDepartment, position, dayOfBirth, gender, email, phoneNumber, address, maritalStatus)
-   data = employee.employeeInfor()
-   return jsonify([e.getEmployee() for e in data])
+   return jsonify(1)
 
 @app.route('/employee/checkin_history', methods=['GET'])
 def checkinDetail():

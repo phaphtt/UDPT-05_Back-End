@@ -52,20 +52,20 @@ class EmployeeManager(Employee):
     manager_phoneNumber = ''
     def getInformation(self):
         return{
-            'id':super().id,
-            'idManager':super().idManager,
-            'idDepartment':super().idDepartment,
-            'idEmployee':super().idEmployee,
-            'firstname':super().firstname,
-            'lastname':super().lastname,
-            'dayOfBirth':super().dayOfBirth,
-            'gender':super().gender,
-            'email':super().email,
-            'phoneNumber':super().phoneNumber,
-            'address':super().address,
-            'maritalStatus':super().maritalStatus,
-            'position':super().position,
-            'active':super().active,
+            'id':self.id,
+            'idManager':self.idManager,
+            'idDepartment':self.idDepartment,
+            'idEmployee':self.idEmployee,
+            'firstname':self.firstname,
+            'lastname':self.lastname,
+            'dayOfBirth':self.dayOfBirth,
+            'gender':self.gender,
+            'email':self.email,
+            'phoneNumber':self.phoneNumber,
+            'address':self.address,
+            'maritalStatus':self.maritalStatus,
+            'position':self.position,
+            'active':self.active,
             'manager_idEmployee':self.manager_idEmployee,
             'manager_firstname':self.manager_firstname,
             'manager_lastname':self.manager_lastname,
@@ -81,7 +81,6 @@ def employeeInfor(id):
     cursor = conn.cursor()
     procedure = 'GetInforEmployeeById'
     cursor.callproc(procedure, [id,])
-    data = []
     for result in cursor.stored_results():
         emp = EmployeeManager()
         temp = result.fetchall()[0]
@@ -107,8 +106,19 @@ def employeeInfor(id):
         emp.manager_position = temp[19]
         emp.manager_email = temp[20]
         emp.manager_phoneNumber = temp[21]
+<<<<<<< Updated upstream
         data.append(emp)
 
+=======
+<<<<<<< HEAD
+        return emp
+
+    
+=======
+        data.append(emp)
+
+>>>>>>> 5adfca45a9099ba1daf1841ab674220d65b66575
+>>>>>>> Stashed changes
 
 class Request:
     def __init__(self):
@@ -285,6 +295,32 @@ class CheckinCheckout:
         conn.close()
         return False
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+def employeeCheckinHistory(idEmployee):
+    conn = connectDatabase.connect()
+    cursor = conn.cursor()
+    query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
+    cursor.execute(query)
+    data = []
+    for t in cursor:
+        checkin = CheckinCheckout()
+        checkin.id = t[0]
+        checkin.idEmployee = t[1]
+        checkin.startTime = str(t[2])
+        checkin.endTime = str(t[3])
+        checkin.date = t[4]
+        checkin.active = t[5]
+        data.append(checkin)
+    cursor.close()
+    conn.close()
+    return data
+
+
+
+=======
+>>>>>>> Stashed changes
     def employeeCheckinHistory(idEmployee):
         conn = connectDatabase.connect()
         cursor = conn.cursor()
@@ -300,3 +336,7 @@ class CheckinCheckout:
             checkin.date = t[4]
             checkin.active = t[5]
             data.append(checkin)
+<<<<<<< Updated upstream
+=======
+>>>>>>> 5adfca45a9099ba1daf1841ab674220d65b66575
+>>>>>>> Stashed changes

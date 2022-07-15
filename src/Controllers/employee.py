@@ -28,6 +28,13 @@ def employeeUpdate():
    Emp.updateInformation(id, firstname, lastname, idDepartment, position, dayOfBirth, gender, email, phoneNumber, address, maritalStatus)
    return jsonify(1)
 
+@app.route('/listemployee', methods=['GET'])
+def listEmployee():
+   idManager = request.args.get('idManager')
+   pageIndex = request.args.get('pageIndex')
+   pageSize = request.args.get('pageSize')
+   data = employee.ListEmployee(idManager, pageIndex, pageSize)
+   return jsonify([e.getInformation() for e in data])
 
 @app.route('/employee/checkin_history', methods=['GET'])
 def checkinDetail():

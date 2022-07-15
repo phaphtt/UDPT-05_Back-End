@@ -15,6 +15,7 @@ class Employee:
     maritalStatus = ''
     position = ''
     active = ''
+    departmentName=''
     def getInformation(self):
         return{
             'id':self.id,
@@ -30,7 +31,8 @@ class Employee:
             'address':self.address,
             'maritalStatus':self.maritalStatus,
             'position':self.position,
-            'active':self.active
+            'active':self.active,
+            'departmentName':self.departmentName
         }
     def updateInformation(self, id, firstname, lastname, idDepartment, position, dayOfBirth, gender, email, phoneNumber, address, maritalStatus):
         conn = connectDatabase.connect()
@@ -110,6 +112,27 @@ def employeeInfor(id):
         emp.manager_phoneNumber = temp[21]
         emp.manager_departmentName = temp[22]
         return emp
+
+
+def ListEmployee(idManager, pageIndex, pageSize):
+    conn = connectDatabase.connect()
+    cursor = conn.cursor()
+    procedure = 'ListEmployeeByManagerId'
+    data=[]
+    cursor.callproc(procedure, [idManager, pageIndex, pageSize,])
+    for result in cursor.stored_results():
+        for temp in result.fetchall():
+            emp = Employee()
+            emp.id = temp[0]
+            emp.firstname = temp[1]
+            emp.lastname = temp[2]
+            emp.idEmployee = temp[3]
+            emp.departmentName = temp[4]
+            emp.position = temp[5]
+            data.append(emp)
+    cursor.close()
+    conn.close()
+    return data
 
 
 class Request:

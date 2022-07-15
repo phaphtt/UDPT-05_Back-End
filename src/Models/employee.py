@@ -241,11 +241,6 @@ def readRequest(idEmployee, idRequestType):
     conn.close()
     return data
     
-
-
-
-
-
 class CheckinCheckout:
     def __init__(self):
         self.id = 0

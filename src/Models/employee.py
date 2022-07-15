@@ -121,6 +121,8 @@ class Request:
         self.idCensor = 0
         self.requestName = ''
         self.hourOT = ''
+        self.dayOT = ''
+        self.startDayOFF = ''
         self.numberDayOFF = ''
         self.noteDayOFF = ''
         self.startDayWFH = ''
@@ -139,6 +141,8 @@ class Request:
             'idCensor':self.idCensor, 
             'requestName':self.requestName, 
             'hourOT':self.hourOT, 
+            'dayOT':self.dayOT, 
+            'startDayOFF':self.startDayOFF, 
             'numberDayOFF':self.numberDayOFF, 
             'noteDayOFF':self.noteDayOFF, 
             'startDayWFH':self.startDayWFH, 
@@ -171,7 +175,7 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOT(self,idRequestType, idEmployee, hourOT, reason):
+    def addRequestOT(self,idRequestType, idEmployee, hourOT, dayOT, reason):
         conn = connectDatabase.connect()
         findIdCensor = conn.cursor()
         queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
@@ -182,7 +186,7 @@ class Request:
         findIdCensor.close()
         
         cursor = conn.cursor()
-        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, reason, requestDate) values ({}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, hourOT, reason))
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate) values ({}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
@@ -192,7 +196,7 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOFF(self, idRequestType, idEmployee, numberDayOFF, noteDayOFF, reason):
+    def addRequestOFF(self, idRequestType, idEmployee, startDayOFF, numberDayOFF, noteDayOFF, reason):
         conn = connectDatabase.connect()
         findIdCensor = conn.cursor()
         queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
@@ -203,7 +207,7 @@ class Request:
         findIdCensor.close()
         
         cursor = conn.cursor()
-        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, numberDayOFF, noteDayOFF, reason, requestDate) values ({}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, numberDayOFF, noteDayOFF, reason))
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, requestDate) values ({}, {}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
@@ -228,15 +232,17 @@ def readRequest(idEmployee, idRequestType):
         req.idCensor = t[4]
         req.requestName = t[5]
         req.hourOT = t[6]
-        req.numberDayOFF = t[7]
-        req.noteDayOFF = t[8]
-        req.startDayWFH = t[9]
-        req.endDayWFH = t[10]
-        req.reason = t[11]
-        req.requestDate = t[12]
-        req.requestStatus = t[13]
-        req.requestRejectReason = t[14]
-        req.active = t[15]
+        req.dayOT = t[7]
+        req.startDayOFF = t[8]
+        req.numberDayOFF = t[9]
+        req.noteDayOFF = t[10]
+        req.startDayWFH = t[11]
+        req.endDayWFH = t[12]
+        req.reason = t[13]
+        req.requestDate = t[14]
+        req.requestStatus = t[15]
+        req.requestRejectReason = t[16]
+        req.active = t[17]
 
         data.append(req)
     cursor.close()

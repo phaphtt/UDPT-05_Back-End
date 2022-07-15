@@ -111,28 +111,30 @@ def requestOTAddDetail():
    idEmployee = request.json['idEmployee']
    idRequestType = request.json['idRequestType']
    hourOT = request.json['hourOT']
+   dayOT = request.json['dayOT']
    reason = request.json['reason']
 
    response = employee.Request()
-   response.addRequestOT(idRequestType, idEmployee, hourOT, reason)
+   response.addRequestOT(idRequestType, idEmployee, hourOT, dayOT, reason)
    if (response):
       return "Thêm thành công"
    return "Thêm thất bại"
 
-# http://127.0.0.1:5001/addrequestOT?idEmployee=2&idRequestType=1&hourOT=4&reason='rãnh'
+# http://127.0.0.1:5001/addrequestOT
 
-@app.route('/addrequestOFF', methods=['GET'])
+@app.route('/addrequestOFF', methods=['POST'])
 def requestOFFAddDetail():
-   # request.form sử dụng cho POST
-   idEmployee = request.args.get('idEmployee')
-   idRequestType = request.args.get('idRequestType')
-   numberDayOFF = request.args.get('numberDayOFF')
-   noteDayOFF = request.args.get('noteDayOFF')
-   reason = request.args.get('reason')
+   idEmployee = request.json('idEmployee')
+   idRequestType = request.json('idRequestType')
+   startDayOFF = request.json('startDayOFF')
+   numberDayOFF = request.json('numberDayOFF')
+   noteDayOFF = request.json('noteDayOFF')
+   reason = request.json('reason')
    response = employee.Request()
-   response.addRequestOFF(idRequestType, idEmployee, numberDayOFF, noteDayOFF, reason)
+   response.addRequestOFF(idRequestType, idEmployee, startDayOFF, numberDayOFF, noteDayOFF, reason)
    if (response):
       return "Thêm thành công"
    return "Thêm thất bại"
 
-# http://127.0.0.1:5001/addrequestOFF?idEmployee=2&idRequestType=2&numberDayOFF=5&noteDayOFF=%27Ngh%E1%BB%89%20h%E1%BA%BFt%27&reason=%27Bi%E1%BA%BFt%20%C4%91%E1%BB%83%20l%C3%A0m%20g%C3%AC%27
+# http://127.0.0.1:5001/addrequestOFF
+

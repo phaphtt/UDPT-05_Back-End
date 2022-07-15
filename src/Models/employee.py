@@ -154,7 +154,7 @@ class Request:
             'active':self.active
         }
     
-    def addRequestWFH(self,idEmployee,idCensor, idRequestType, startDayWFH, endDayWFH, reason):
+    def addRequestWFH(self,idRequestType,idEmployee,idCensor, startDayWFH, endDayWFH, reason):
         conn = connectDatabase.connect()
         findIdCensor = conn.cursor()
         queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))

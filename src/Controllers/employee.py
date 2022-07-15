@@ -82,15 +82,15 @@ def requestReadDetail():
 
 @app.route('/employee/addrequestWFH', methods=['POST'])
 def requestWFHAddDetail():
-   idEmployee = request.json['idEmployee']
    idRequestType = request.json['idRequestType']
+   idEmployee = request.json['idEmployee']
    idCensor = request.json['idCensor']
    startDayWFH = request.json['startDayWFH']
    endDayWFH = request.json['endDayWFH']
    reason = request.json['reason']
 
    response = employee.Request()
-   response.addRequestWFH(idEmployee, idRequestType,idCensor, startDayWFH, endDayWFH, reason)
+   response.addRequestWFH(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason)
    return {
       'message':'Thêm thành công'
    }

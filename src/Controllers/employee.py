@@ -138,3 +138,11 @@ def requestOFFAddDetail():
 
 # http://127.0.0.1:5001/addrequestOFF
 
+{
+    "idEmployee": 2,
+	"idRequestType": 2,
+    "startDayOFF": "2022-01-07",
+    "numberDayOFF": 3,
+    "noteDayOFF": "Nghỉ hết",
+	"reason": "Stress"
+}

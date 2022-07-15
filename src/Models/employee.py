@@ -123,7 +123,7 @@ class Request:
         self.hourOT = ''
         self.dayOT = ''
         self.startDayOFF = ''
-        self.numberDayOFF = ''
+        self.numberDayOFF = 0
         self.noteDayOFF = ''
         self.startDayWFH = ''
         self.endDayWFH = ''

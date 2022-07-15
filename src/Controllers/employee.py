@@ -28,6 +28,7 @@ def employeeUpdate():
    Emp.updateInformation(id, firstname, lastname, idDepartment, position, dayOfBirth, gender, email, phoneNumber, address, maritalStatus)
    return jsonify(1)
 
+
 @app.route('/employee/checkin_history', methods=['GET'])
 def checkinDetail():
    idEmployee = request.args.get('idEmployee')
@@ -65,7 +66,10 @@ def checkout():
 @app.route('/employee/listtask', methods=['GET'])
 def employeeListTask():
    idEmployee = request.args.get('idEmployee')
-   data = employee_task.listTask(idEmployee)
+   pageIndex = request.args.get('pageIndex')
+   pageSize = request.args.get('pageSize')
+   status = request.args.get('status')
+   data = employee_task.listTask(idEmployee, pageIndex, pageSize, status)
    return jsonify([t.getTaskEmployee() for t in data])
 
 # url: http://127.0.0.1:5001/employee/checkout
@@ -130,6 +134,7 @@ def requestOFFAddDetail():
    numberDayOFF = request.json('numberDayOFF')
    noteDayOFF = request.json('noteDayOFF')
    reason = request.json('reason')
+   
    response = employee.Request()
    response.addRequestOFF(idRequestType, idEmployee, startDayOFF, numberDayOFF, noteDayOFF, reason)
    if (response):
@@ -138,3 +143,11 @@ def requestOFFAddDetail():
 
 # http://127.0.0.1:5001/addrequestOFF
 
+{
+    "idEmployee": 2,
+	"idRequestType": 2,
+    "startDayOFF": "2022-01-07",
+    "numberDayOFF": 3,
+    "noteDayOFF": "Nghỉ hết",
+	"reason": "Stress"
+}

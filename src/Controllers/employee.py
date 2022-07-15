@@ -130,6 +130,7 @@ def requestOFFAddDetail():
    numberDayOFF = request.json('numberDayOFF')
    noteDayOFF = request.json('noteDayOFF')
    reason = request.json('reason')
+   
    response = employee.Request()
    response.addRequestOFF(idRequestType, idEmployee, startDayOFF, numberDayOFF, noteDayOFF, reason)
    if (response):

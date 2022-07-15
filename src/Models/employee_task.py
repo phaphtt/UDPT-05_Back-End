@@ -18,11 +18,11 @@ class EmployeeTask:
             'status': self.status
         }
 
-def listTask(idEmployee):
+def listTask(idEmployee, pageIndex, pageSize, status):
     conn = connectDatabase.connect()
     cursor = conn.cursor()
     procedure = 'ListTaskEmployeeById'
-    cursor.callproc(procedure, [idEmployee,])
+    cursor.callproc(procedure, [idEmployee, pageIndex, pageSize, status,])
     data = []
     for result in cursor.stored_results():
         for temp in result.fetchall():

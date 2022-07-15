@@ -128,12 +128,12 @@ def requestOTAddDetail():
 
 @app.route('/addrequestOFF', methods=['POST'])
 def requestOFFAddDetail():
-   idEmployee = request.json('idEmployee')
-   idRequestType = request.json('idRequestType')
-   startDayOFF = request.json('startDayOFF')
-   numberDayOFF = request.json('numberDayOFF')
-   noteDayOFF = request.json('noteDayOFF')
-   reason = request.json('reason')
+   idEmployee = request.json['idEmployee']
+   idRequestType = request.json['idRequestType']
+   startDayOFF = request.json['startDayOFF']
+   numberDayOFF = request.json['numberDayOFF']
+   noteDayOFF = request.json['noteDayOFF']
+   reason = request.json['reason']
    
    response = employee.Request()
    response.addRequestOFF(idRequestType, idEmployee, startDayOFF, numberDayOFF, noteDayOFF, reason)

@@ -196,7 +196,7 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOFF(self, idRequestType, idEmployee, startDayOFF, numberDayOFF, noteDayOFF, reason):
+    def addRequestOFF(self,idRequestType, idEmployee, startDayOFF, numberDayOFF, noteDayOFF, reason):
         conn = connectDatabase.connect()
         findIdCensor = conn.cursor()
         queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))

@@ -106,19 +106,8 @@ def employeeInfor(id):
         emp.manager_position = temp[19]
         emp.manager_email = temp[20]
         emp.manager_phoneNumber = temp[21]
-<<<<<<< Updated upstream
-        data.append(emp)
-
-=======
-<<<<<<< HEAD
         return emp
 
-    
-=======
-        data.append(emp)
-
->>>>>>> 5adfca45a9099ba1daf1841ab674220d65b66575
->>>>>>> Stashed changes
 
 class Request:
     def __init__(self):
@@ -295,9 +284,6 @@ class CheckinCheckout:
         conn.close()
         return False
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
 def employeeCheckinHistory(idEmployee):
     conn = connectDatabase.connect()
     cursor = conn.cursor()
@@ -318,25 +304,19 @@ def employeeCheckinHistory(idEmployee):
     return data
 
 
-
-=======
->>>>>>> Stashed changes
-    def employeeCheckinHistory(idEmployee):
-        conn = connectDatabase.connect()
-        cursor = conn.cursor()
-        query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
-        cursor.execute(query)
-        data = []
-        for t in cursor:
-            checkin = CheckinCheckout()
-            checkin.id = t[0]
-            checkin.idEmployee = t[1]
-            checkin.startTime = str(t[2])
-            checkin.endTime = str(t[3])
-            checkin.date = t[4]
-            checkin.active = t[5]
-            data.append(checkin)
-<<<<<<< Updated upstream
-=======
->>>>>>> 5adfca45a9099ba1daf1841ab674220d65b66575
->>>>>>> Stashed changes
+def employeeCheckinHistory(idEmployee):
+    conn = connectDatabase.connect()
+    cursor = conn.cursor()
+    query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
+    cursor.execute(query)
+    data = []
+    for t in cursor:
+        checkin = CheckinCheckout()
+        checkin.id = t[0]
+        checkin.idEmployee = t[1]
+        checkin.startTime = str(t[2])
+        checkin.endTime = str(t[3])
+        checkin.date = t[4]
+        checkin.active = t[5]
+        data.append(checkin)
+    return data

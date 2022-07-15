@@ -7,18 +7,9 @@ from src.Models import employee_task
 
 @app.route('/employee/information', methods=['GET'])
 def employeeDetail():
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
    idEmployee = request.args.get('idEmployee')
    data = employee.employeeInfor(idEmployee)
    return jsonify(data.getInformation())
-=======
->>>>>>> Stashed changes
-   employeeId = request.args.get('employeeId')
-   data = employee.employeeInfor(employeeId)
-   return jsonify([e.getInformation() for e in data])
->>>>>>> 5adfca45a9099ba1daf1841ab674220d65b66575
 
 @app.route('/employee/update', methods=['POST'])
 def employeeUpdate():
@@ -35,13 +26,6 @@ def employeeUpdate():
    maritalStatus = request.json['maritalStatus']
    Emp = employee.Employee()
    Emp.updateInformation(id, firstname, lastname, idDepartment, position, dayOfBirth, gender, email, phoneNumber, address, maritalStatus)
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-
-=======
->>>>>>> 5adfca45a9099ba1daf1841ab674220d65b66575
->>>>>>> Stashed changes
    data = employee.employeeInfor()
    return jsonify([e.getEmployee() for e in data])
 
@@ -84,17 +68,8 @@ def employeeListTask():
    idEmployee = request.args.get('idEmployee')
    data = employee_task.listTask(idEmployee)
    return jsonify([t.getTaskEmployee() for t in data])
-<<<<<<< Updated upstream
 
-
-=======
-<<<<<<< HEAD
 # url: http://127.0.0.1:5001/employee/checkout
-=======
-
-
->>>>>>> 5adfca45a9099ba1daf1841ab674220d65b66575
->>>>>>> Stashed changes
 
 @app.route('/readrequest', methods=['GET'])
 def requestReadDetail():
@@ -129,9 +104,7 @@ def requestWFHAddDetail():
 #     "startDayWFH": "'2022-07-14'",
 #     "endDayWFH": "'2022-07-24'",
 #     "reason":"'cuoi vo'"
-<<<<<<< HEAD
 # }
-=======
 # }
 
 @app.route('/addrequestOT', methods=['POST'])
@@ -164,8 +137,3 @@ def requestOFFAddDetail():
    return "Thêm thất bại"
 
 # http://127.0.0.1:5001/addrequestOFF?idEmployee=2&idRequestType=2&numberDayOFF=5&noteDayOFF=%27Ngh%E1%BB%89%20h%E1%BA%BFt%27&reason=%27Bi%E1%BA%BFt%20%C4%91%E1%BB%83%20l%C3%A0m%20g%C3%AC%27
-
-<<<<<<< Updated upstream
-=======
->>>>>>> 5adfca45a9099ba1daf1841ab674220d65b66575
->>>>>>> Stashed changes

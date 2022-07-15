@@ -41,7 +41,6 @@ class Employee:
         conn.close()
         return
 
-<<<<<<< Updated upstream
 class EmployeeManager(Employee):
     manager_idEmployee = ''
     manager_firstname = ''
@@ -109,7 +108,8 @@ def employeeInfor(id):
         emp.manager_email = temp[20]
         emp.manager_phoneNumber = temp[21]
         data.append(emp)
-=======
+
+
 class Request:
     def __init__(self):
         self.id = 0
@@ -169,6 +169,48 @@ class Request:
         conn.close()
         return False
 
+    def addRequestOT(self,idRequestType, idEmployee, hourOT, reason):
+        conn = connectDatabase.connect()
+        findIdCensor = conn.cursor()
+        queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
+        findIdCensor.execute(queryFindIdManager)
+
+        record = findIdCensor.fetchone()
+        idCensor = record[0]
+        findIdCensor.close()
+        
+        cursor = conn.cursor()
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, reason, requestDate) values ({}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, hourOT, reason))
+        cursor.execute(query)
+        if(conn.commit()):
+            cursor.close()
+            conn.close()
+            return True
+        cursor.close()
+        conn.close()
+        return False
+
+    def addRequestOFF(self, idRequestType, idEmployee, numberDayOFF, noteDayOFF, reason):
+        conn = connectDatabase.connect()
+        findIdCensor = conn.cursor()
+        queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
+        findIdCensor.execute(queryFindIdManager)
+
+        record = findIdCensor.fetchone()
+        idCensor = record[0]
+        findIdCensor.close()
+        
+        cursor = conn.cursor()
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, numberDayOFF, noteDayOFF, reason, requestDate) values ({}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, numberDayOFF, noteDayOFF, reason))
+        cursor.execute(query)
+        if(conn.commit()):
+            cursor.close()
+            conn.close()
+            return True
+        cursor.close()
+        conn.close()
+        return False
+
 def readRequest(idEmployee, idRequestType):
     conn = connectDatabase.connect()
     cursor = conn.cursor()
@@ -198,6 +240,10 @@ def readRequest(idEmployee, idRequestType):
     cursor.close()
     conn.close()
     return data
+    
+
+
+
 
 
 class CheckinCheckout:
@@ -244,25 +290,18 @@ class CheckinCheckout:
         conn.close()
         return False
 
-def employeeCheckinHistory(idEmployee):
-    conn = connectDatabase.connect()
-    cursor = conn.cursor()
-    query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
-    cursor.execute(query)
-    data = []
-    for t in cursor:
-        checkin = CheckinCheckout()
-        checkin.id = t[0]
-        checkin.idEmployee = t[1]
-        checkin.startTime = str(t[2])
-        checkin.endTime = str(t[3])
-        checkin.date = t[4]
-        checkin.active = t[5]
-        data.append(checkin)
->>>>>>> Stashed changes
-    cursor.close()
-    conn.close()
-    return data
-
-
-
+    def employeeCheckinHistory(idEmployee):
+        conn = connectDatabase.connect()
+        cursor = conn.cursor()
+        query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
+        cursor.execute(query)
+        data = []
+        for t in cursor:
+            checkin = CheckinCheckout()
+            checkin.id = t[0]
+            checkin.idEmployee = t[1]
+            checkin.startTime = str(t[2])
+            checkin.endTime = str(t[3])
+            checkin.date = t[4]
+            checkin.active = t[5]
+            data.append(checkin)

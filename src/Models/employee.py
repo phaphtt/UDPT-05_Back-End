@@ -50,6 +50,7 @@ class EmployeeManager(Employee):
     manager_position = ''
     manager_email = ''
     manager_phoneNumber = ''
+    manager_departmentName = ''
     def getInformation(self):
         return{
             'id':self.id,
@@ -73,7 +74,8 @@ class EmployeeManager(Employee):
             'manager_idDepartment':self.manager_idDepartment,
             'manager_position':self.manager_position,
             'manager_email':self.manager_email,
-            'manager_phoneNumber':self.manager_phoneNumber
+            'manager_phoneNumber':self.manager_phoneNumber,
+            'manager_departmentName':self.manager_departmentName
         }
 
 def employeeInfor(id):
@@ -106,6 +108,7 @@ def employeeInfor(id):
         emp.manager_position = temp[19]
         emp.manager_email = temp[20]
         emp.manager_phoneNumber = temp[21]
+        emp.manager_departmentName = temp[22]
         return emp
 
 

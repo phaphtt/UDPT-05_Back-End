@@ -109,7 +109,7 @@ def requestWFHAddDetail():
 # url: http://127.0.0.1:5001/employee/addrequestWFH
 # body: {
 #    "idEmployee" : 2,
-#     "idRequestType": 2,
+#     "idRequestType": 3,
 #     "idCensor": 3,
 #     "startDayWFH": "'2022-07-14'",
 #     "endDayWFH": "'2022-07-24'",

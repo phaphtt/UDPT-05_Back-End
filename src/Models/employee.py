@@ -279,6 +279,7 @@ class CheckinCheckout:
         self.startTime = ''
         self.endTime = ''
         self.date = ''
+        self.checkinStatus =''
         self.active = ''
     def getCheckinHistory(self):
         return{
@@ -287,6 +288,7 @@ class CheckinCheckout:
             'startTime':self.startTime, 
             'endTime':self.endTime, 
             'date':self.date, 
+            'checkinStatus':self.checkinStatus,
             'active':self.active
         }
 
@@ -329,26 +331,9 @@ def employeeCheckinHistory(idEmployee):
         checkin.startTime = str(t[2])
         checkin.endTime = str(t[3])
         checkin.date = t[4]
-        checkin.active = t[5]
+        checkin.checkinStatus = t[5]
+        checkin.active = t[6]
         data.append(checkin)
     cursor.close()
     conn.close()
-    return data
-
-
-def employeeCheckinHistory(idEmployee):
-    conn = connectDatabase.connect()
-    cursor = conn.cursor()
-    query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
-    cursor.execute(query)
-    data = []
-    for t in cursor:
-        checkin = CheckinCheckout()
-        checkin.id = t[0]
-        checkin.idEmployee = t[1]
-        checkin.startTime = str(t[2])
-        checkin.endTime = str(t[3])
-        checkin.date = t[4]
-        checkin.active = t[5]
-        data.append(checkin)
     return data

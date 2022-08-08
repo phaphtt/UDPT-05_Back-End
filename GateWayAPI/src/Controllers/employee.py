@@ -1,6 +1,5 @@
 from xmlrpc.client import ResponseError
 from src import app
-from xmlrpc.client import ResponseError
 from flask import jsonify, request, Response
 from src.Models import employee
 from src.Models import employee_task

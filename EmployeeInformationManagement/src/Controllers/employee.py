@@ -65,3 +65,11 @@ def listEmployee():
 #    status = request.args.get('status')
 #    data = employee_task.listTask(idEmployee, pageIndex, pageSize, status)
 #    return jsonify([t.getTaskEmployee() for t in data])
+
+
+@app.route('/getIdCensor', methods=['GET'])
+def getIdCensorInformation():
+   idEmployee = request.args.get('idEmployee')
+   data = employee.getIdCensor(idEmployee)
+   return jsonify(data)
+

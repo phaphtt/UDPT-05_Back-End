@@ -43,6 +43,9 @@ class Employee:
         conn.close()
         return
 
+
+
+
 class EmployeeManager(Employee):
     manager_idEmployee = ''
     manager_firstname = ''
@@ -134,7 +137,17 @@ def ListEmployee(idManager, pageIndex, pageSize):
     conn.close()
     return data
 
-
+# This func is for EmployeeRequest service
+def getIdCensor (idEmployee):
+    conn = connectDatabase.connect()
+    findIdCensor = conn.cursor()
+    queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
+    findIdCensor.execute(queryFindIdManager)
+    record = findIdCensor.fetchone()
+    idCensor = record[0]
+    findIdCensor.close()
+    return idCensor
+    
 class Request:
     def __init__(self):
         self.id = 0

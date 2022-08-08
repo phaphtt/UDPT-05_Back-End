@@ -6,7 +6,6 @@ from flask import jsonify, request, Response
 import json
 from src.Config import InformationService
 
-
 #http://127.0.0.1:5001/employee/information?idEmployee=1
 @app.route('/employee/information', methods=['GET'])
 def employeeDetail():
@@ -58,3 +57,5 @@ def employeeUpdate():
     request.json['add'] = 'add'
     print(request.json)
     return jsonify(1)
+
+

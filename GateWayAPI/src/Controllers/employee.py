@@ -11,15 +11,23 @@ from src.Config import InformationService
 def employeeDetail():
     idEmployee = request.args.get('idEmployee')
 
-    apiUrl = InformationService.url + '/employee/information?idEmployee=' + idEmployee
+    apiUrl_infor = InformationService.url + '/employee/information?idEmployee=' + idEmployee
 
-    execute = requests.get(apiUrl)
+    execute = requests.get(apiUrl_infor)
 
     if(execute.status_code != 200):
-        return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
+        return jsonify({'message':'Gặp sự cố trong việc lấy thông tin nhân viên'})
     else:
         dic = execute.json()
-        return dic
+        apiUrl_department = InformationService.url + '/department/list'
+
+        execute = requests.get(apiUrl_department)
+        if(execute.status_code != 200):
+            return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
+        else:
+            dic_temp = execute.json()
+            dic['list_department'] = dic_temp
+            return dic
 
 #http://127.0.0.1:5001/listemployee?idManager=1&pageIndex=1&pageSize=5
 @app.route('/listemployee', methods=['GET'])
@@ -41,21 +49,15 @@ def listEmployee():
 
 @app.route('/employee/update', methods=['PUT'])
 def employeeUpdate():
-#    id = request.json['id']
-#    firstname = request.json['firstname']
-#    lastname = request.json['lastname']
-#    idDepartment = request.json['idDepartment']
-#    position = request.json['position']
-#    dayOfBirth = request.json['dayOfBirth']
-#    gender = request.json['gender']
-#    email = request.json['email']
-#    phoneNumber = request.json['phoneNumber']
-#    address = request.json['address']
-#    maritalStatus = request.json['maritalStatus']
-#    Emp = employee.Employee()
-#    Emp.updateInformation(id, firstname, lastname, idDepartment, position, dayOfBirth, gender, email, phoneNumber, address, maritalStatus)
     request.json['add'] = 'add'
-    print(request.json)
-    return jsonify(1)
+    apiUrl = InformationService.url + '/employee/update'
+
+    headers = {"Content-Type": "application/json"}
+    execute = requests.put(apiUrl, data=json.dumps(request.json), headers=headers)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
+    else:
+        return jsonify(1)
 
 

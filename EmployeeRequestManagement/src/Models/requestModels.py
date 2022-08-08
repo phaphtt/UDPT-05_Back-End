@@ -63,16 +63,9 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOT(self,idRequestType, idEmployee, hourOT, dayOT, reason):
+    def addRequestOT(self, idRequestType, idEmployee, idCensor, hourOT, dayOT, reason):
         conn = connectDatabase.connect()
-        findIdCensor = conn.cursor()
-        queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
-        findIdCensor.execute(queryFindIdManager)
 
-        record = findIdCensor.fetchone()
-        idCensor = record[0]
-        findIdCensor.close()
-        
         cursor = conn.cursor()
         query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate) values ({}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason))
         cursor.execute(query)
@@ -84,15 +77,8 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOFF(self,idRequestType, idEmployee, startDayOFF, numberDayOFF, noteDayOFF, reason):
+    def addRequestOFF(self,idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason):
         conn = connectDatabase.connect()
-        findIdCensor = conn.cursor()
-        queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
-        findIdCensor.execute(queryFindIdManager)
-
-        record = findIdCensor.fetchone()
-        idCensor = record[0]
-        findIdCensor.close()
         
         cursor = conn.cursor()
         query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, requestDate) values ({}, {}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason))

@@ -16,18 +16,33 @@ def requestReadDetail():
 @app.route('/addrequestOT', methods=['POST'])
 def requestOTAddDetail():
    idEmployee = request.json['idEmployee']
+   idCensor = request.json['idCensor']
    idRequestType = request.json['idRequestType']
    hourOT = request.json['hourOT']
    dayOT = request.json['dayOT']
    reason = request.json['reason']
 
    response = requestModels.Request()
-   response.addRequestOT(idRequestType, idEmployee, hourOT, dayOT, reason)
+   response.addRequestOT(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason)
    if (response):
       return "Thêm thành công"
    return "Thêm thất bại"
 
-# http://127.0.0.1:5001/addrequestOT
+@app.route('/addrequestOFF', methods=['POST'])
+def requestOFFAddDetail():
+   idEmployee = request.json['idEmployee']
+   idCensor = request.json['idCensor']
+   idRequestType = request.json['idRequestType']
+   startDayOFF = request.json['startDayOFF']
+   numberDayOFF = request.json['numberDayOFF']
+   noteDayOFF = request.json['noteDayOFF']
+   reason = request.json['reason']
+   
+   response = requestModels.Request()
+   response.addRequestOFF(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason)
+   if (response):
+      return "Thêm thành công"
+   return "Thêm thất bại"
 
 
 # http://127.0.0.1:5001/readrequest?idEmployee=2&idRequestType=1

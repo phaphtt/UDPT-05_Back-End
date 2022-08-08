@@ -22,7 +22,7 @@ def employeeDetail():
         dic = execute.json()
         return dic
 
-#http://127.0.0.1:5004/listemployee?idManager=1&pageIndex=1&pageSize=5
+#http://127.0.0.1:5001/listemployee?idManager=1&pageIndex=1&pageSize=5
 @app.route('/listemployee', methods=['GET'])
 def listEmployee():
     idManager = request.args.get('idManager')

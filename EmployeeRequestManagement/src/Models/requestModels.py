@@ -63,16 +63,9 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOT(self,idRequestType, idEmployee, hourOT, dayOT, reason):
+    def addRequestOT(self, idRequestType, idEmployee, idCensor, hourOT, dayOT, reason):
         conn = connectDatabase.connect()
-        findIdCensor = conn.cursor()
-        queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
-        findIdCensor.execute(queryFindIdManager)
 
-        record = findIdCensor.fetchone()
-        idCensor = record[0]
-        findIdCensor.close()
-        
         cursor = conn.cursor()
         query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate) values ({}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason))
         cursor.execute(query)
@@ -84,15 +77,8 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOFF(self,idRequestType, idEmployee, startDayOFF, numberDayOFF, noteDayOFF, reason):
+    def addRequestOFF(self,idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason):
         conn = connectDatabase.connect()
-        findIdCensor = conn.cursor()
-        queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
-        findIdCensor.execute(queryFindIdManager)
-
-        record = findIdCensor.fetchone()
-        idCensor = record[0]
-        findIdCensor.close()
         
         cursor = conn.cursor()
         query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, requestDate) values ({}, {}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason))
@@ -135,4 +121,85 @@ def readRequest(idEmployee, idRequestType):
         data.append(req)
     cursor.close()
     conn.close()
+    return data
+
+class CheckinCheckout:
+    def __init__(self):
+        self.id = 0
+        self.idEmployee = 0
+        self.startTime = ''
+        self.endTime = ''
+        self.date = ''
+        self.active = ''
+    def getCheckinHistory(self):
+        return{
+            'id':self.id,               
+            'idEmployee':self.idEmployee,         
+            'startTime':self.startTime, 
+            'endTime':self.endTime, 
+            'date':self.date, 
+            'active':self.active
+        }
+
+    def addCheckin(self,idEmployee,startTime,date):
+        conn = connectDatabase.connect()
+        cursor = conn.cursor()
+        query = ('INSERT INTO CheckinCheckout (idEmployee, startTime, date) values ({}, {}, {})'.format(idEmployee, startTime, date))
+        cursor.execute(query)
+        if(conn.commit()):
+            cursor.close()
+            conn.close()
+            return True
+        cursor.close()
+        conn.close()
+        return False
+
+    def addCheckout(self,idEmployee,endTime,date):
+        conn = connectDatabase.connect()
+        cursor = conn.cursor()
+        query = ('UPDATE CheckinCheckout SET endTime = {} WHERE idEmployee = {} AND date = {}'.format(endTime, idEmployee, date))
+        cursor.execute(query)
+        if(conn.commit()):
+            cursor.close()
+            conn.close()
+            return True
+        cursor.close()
+        conn.close()
+        return False
+
+def employeeCheckinHistory(idEmployee):
+    conn = connectDatabase.connect()
+    cursor = conn.cursor()
+    query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
+    cursor.execute(query)
+    data = []
+    for t in cursor:
+        checkin = CheckinCheckout()
+        checkin.id = t[0]
+        checkin.idEmployee = t[1]
+        checkin.startTime = str(t[2])
+        checkin.endTime = str(t[3])
+        checkin.date = t[4]
+        checkin.active = t[5]
+        data.append(checkin)
+    cursor.close()
+    conn.close()
+    return data
+
+
+def employeeCheckinHistory(idEmployee):
+    conn = connectDatabase.connect()
+    cursor = conn.cursor()
+    query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
+    cursor.execute(query)
+    data = []
+    for t in cursor:
+        checkin = CheckinCheckout()
+        checkin.id = t[0]
+        checkin.idEmployee = t[1]
+        checkin.startTime = str(t[2])
+        checkin.endTime = str(t[3])
+        checkin.date = t[4]
+        checkin.active = t[5]
+        data.append(checkin)
     return data

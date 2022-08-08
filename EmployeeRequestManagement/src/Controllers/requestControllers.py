@@ -9,28 +9,42 @@ def requestReadDetail():
    idRequestType = request.args.get('idRequestType')
    data = requestModels.readRequest(idEmployee, idRequestType)
    return jsonify([e.getRequest() for e in data])
-
 # http://127.0.0.1:5003/readrequest?idEmployee=3&idRequestType=1
 
 
 @app.route('/addrequestOT', methods=['POST'])
 def requestOTAddDetail():
    idEmployee = request.json['idEmployee']
+   idCensor = request.json['idCensor']
    idRequestType = request.json['idRequestType']
    hourOT = request.json['hourOT']
    dayOT = request.json['dayOT']
    reason = request.json['reason']
 
    response = requestModels.Request()
-   response.addRequestOT(idRequestType, idEmployee, hourOT, dayOT, reason)
+   response.addRequestOT(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason)
    if (response):
       return "Thêm thành công"
    return "Thêm thất bại"
 
-# http://127.0.0.1:5001/addrequestOT
+@app.route('/addrequestOFF', methods=['POST'])
+def requestOFFAddDetail():
+   idEmployee = request.json['idEmployee']
+   idCensor = request.json['idCensor']
+   idRequestType = request.json['idRequestType']
+   startDayOFF = request.json['startDayOFF']
+   numberDayOFF = request.json['numberDayOFF']
+   noteDayOFF = request.json['noteDayOFF']
+   reason = request.json['reason']
+   
+   response = requestModels.Request()
+   response.addRequestOFF(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason)
+   if (response):
+      return "Thêm thành công"
+   return "Thêm thất bại"
 
 
-# http://127.0.0.1:5001/readrequest?idEmployee=2&idRequestType=1
+# http://127.0.0.1:5003/readrequest?idEmployee=2&idRequestType=1
 
 @app.route('/employee/addrequestWFH', methods=['POST'])
 def requestWFHAddDetail():
@@ -45,4 +59,38 @@ def requestWFHAddDetail():
    response.addRequestWFH(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason)
    return {
       'message':'Thêm thành công'
+   }
+
+@app.route('/employee/checkin_history', methods=['GET'])
+def checkinDetail():
+   idEmployee = request.args.get('idEmployee')
+   data = requestModels.employeeCheckinHistory(idEmployee)
+   return jsonify([e.getCheckinHistory() for e in data])
+
+# url: http://127.0.0.1:5003/employee/checkin_history?idEmployee=1
+
+@app.route('/employee/checkin', methods=['POST'])
+def checkin():
+   idEmployee = request.json['idEmployee']
+   startTime = request.json['startTime']
+   date = request.json['date']
+
+   response = requestModels.CheckinCheckout()
+   response.addCheckin(idEmployee,startTime,date)
+   return {
+      'message':'Thêm thành công'
+   }
+
+# url: http://127.0.0.1:5003/employee/checkin
+
+@app.route('/employee/checkout', methods=['POST'])
+def checkout():
+   idEmployee = request.json['idEmployee']
+   endTime = request.json['endTime']
+   date = request.json['date']
+
+   response = requestModels.CheckinCheckout()
+   response.addCheckout(idEmployee,endTime,date)
+   return {
+      'message':'Cập nhật thành công'
    }

@@ -9,6 +9,7 @@ def requestReadDetail():
    idRequestType = request.args.get('idRequestType')
    data = requestModels.readRequest(idEmployee, idRequestType)
    return jsonify([e.getRequest() for e in data])
+   
 # http://127.0.0.1:5003/readrequest?idEmployee=3&idRequestType=1
 
 

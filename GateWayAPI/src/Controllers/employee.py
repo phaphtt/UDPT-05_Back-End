@@ -61,3 +61,17 @@ def employeeUpdate():
         return jsonify(1)
 
 
+@app.route('/employee/readrequest', methods=['GET'])
+def requestReadDetail():
+    idEmployee = request.args.get('idEmployee')
+    idRequestType = request.args.get('idRequestType')
+    apiUrl = InformationService.urlEmployeeRequest + '/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
+    execute = requests.get(apiUrl)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Không lấy được danh sách yêu cầu'})
+    else:
+        dic = execute.json()
+        return jsonify(dic)
+        
+# http://127.0.0.1:5001/employee/readrequest?idEmployee=2&idRequestType=1

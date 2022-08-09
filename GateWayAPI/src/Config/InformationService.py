@@ -1,4 +1,5 @@
 url = 'https://employee-infor.herokuapp.com'
+urlEmployeeRequest = 'https://employee-request.herokuapp.com'
 from mysql.connector import (connection)
 def connect():
     conn = connection.MySQLConnection(user='phap', password='phap123456',
@@ -6,3 +7,4 @@ def connect():
                                      port='3307',
                                      database='EmployeeInformation')
     return conn
+

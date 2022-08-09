@@ -58,4 +58,57 @@ def employeeUpdate():
     print(request.json)
     return jsonify(1)
 
+#http://127.0.0.1:5001/employee/information?idEmployee=1
+@app.route('/employee/checkin_history', methods=['GET'])
+def listEmployeeCheckin():
+   idEmployee = request.args.get('idEmployee')
+
+   apiUrl = InformationService.url + '/employee/checkin_history?idEmployee=' + idEmployee
+
+   execute = requests.get(apiUrl)
+
+   if(execute.status_code != 200):
+      return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
+   else:
+      dic = execute.json()
+      return dic
+
+@app.route('/employee/addrequestWFH', methods=['GET'])
+def listEmployeeCheckin():
+    idEmployee = request.json['idEmployee']
+    getCensorIdUrl = InformationService.url + '/getIdCensor?idEmployee=' + idEmployee
+    executeCensorId = requests.get(getCensorIdUrl)
+    idCensor = json.decoder(executeCensorId)
+    idRequestType = request.json['idRequestType']
+    startDayWFH = request.json['startDayWFH']
+    endDayWFH = request.json['endDayWFH']
+    reason = request.json['reason']
+    body = {
+        "idEmployee" : idEmployee,
+        "idRequestType" : idRequestType,
+        "idCensor" : idCensor,
+        "startDayWFH" : startDayWFH,
+        "endDayWFH" : endDayWFH,
+        "reason" : reason
+
+    }
+    apiUrl = InformationService.url + '/employee/addrequestWFH?idEmployee=' + idEmployee
+
+    execute = requests.get(apiUrl)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
+    else:
+        dic = execute.json()
+        return dic
+
+# body: {
+#    "idEmployee" : 2,
+#     "idRequestType": 2,
+#     "idCensor": 3,
+#     "startDayWFH": "'2022-07-14'",
+#     "endDayWFH": "'2022-07-24'",
+#     "reason":"'cuoi vo'"
+# }
+# }
 

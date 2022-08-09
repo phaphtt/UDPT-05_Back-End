@@ -44,13 +44,6 @@ class Request:
     
     def addRequestWFH(self,idRequestType,idEmployee,idCensor, startDayWFH, endDayWFH, reason):
         conn = connectDatabase.connect()
-        findIdCensor = conn.cursor()
-        queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
-        findIdCensor.execute(queryFindIdManager)
-
-        record = findIdCensor.fetchone()
-        idCensor = record[0]
-        findIdCensor.close()
         
         cursor = conn.cursor()
         query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason) values ({}, {}, {}, {}, {}, {})'.format(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason))

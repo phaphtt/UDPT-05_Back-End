@@ -1,3 +1,4 @@
+from operator import methodcaller
 import requests
 from xmlrpc.client import ResponseError
 from src import app
@@ -73,5 +74,68 @@ def requestReadDetail():
     else:
         dic = execute.json()
         return jsonify(dic)
-        
+
 # http://127.0.0.1:5001/employee/readrequest?idEmployee=2&idRequestType=1
+
+
+@app.route('/employee/addrequestOT', methods=['POST'])
+def requestOTAddDetail():
+    idEmployee = request.json['idEmployee']
+    # str(idEmployee) vì request.json nó đọc luôn kiểu dl post lên, còn request.args thì nó string sẵn
+    apiGetIdCensor = 'http://127.0.0.1:5004' + '/getIdCensor?idEmployee=' + str(idEmployee)
+    # apiGetIdCensor = InformationService.urlEmployeeInfor + '/getIdCensor?idEmployee=' + idEmployee
+    execute = requests.get(apiGetIdCensor)
+    if(execute.status_code != 200):
+        return jsonify({'message':'Không lấy được người kiểm duyệt của nhân viên có mã: ' + idEmployee})
+    else:
+        idCensor = execute.json()
+        # return str(idCensor)
+        
+    idRequestType = request.json['idRequestType']
+    hourOT = request.json['hourOT']
+    dayOT = request.json['dayOT']
+    reason = request.json['reason']
+    dataAddRequestOT = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'hourOT': hourOT, 'dayOT': dayOT, 'reason': reason, 'idCensor': idCensor}
+    # return dataAddRequestOT
+
+    apiAddRequestOT = InformationService.urlEmployeeRequest + '/addrequestOT'
+
+    headers = {"Content-Type": "application/json"}
+    execute = requests.post(apiAddRequestOT, data=json.dumps(dataAddRequestOT), headers=headers)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Thêm thất bại'})
+    else:
+        return jsonify({'message':'Thêm thành công'})
+
+
+
+@app.route('/employee/addrequestOFF', methods=['POST'])
+def requestOFFAddDetail():
+    idEmployee = request.json['idEmployee']
+    apiGetIdCensor = 'http://127.0.0.1:5004' + '/getIdCensor?idEmployee=' + str(idEmployee)
+    # apiGetIdCensor = InformationService.urlEmployeeInfor + '/getIdCensor?idEmployee=' + idEmployee
+    execute = requests.get(apiGetIdCensor)
+    if(execute.status_code != 200):
+        return jsonify({'message':'Không lấy được người kiểm duyệt của nhân viên có mã: ' + idEmployee})
+    else:
+        idCensor = execute.json()
+        # return str(idCensor)
+        
+    idRequestType = request.json['idRequestType']
+    startDayOFF = request.json['startDayOFF']
+    numberDayOFF = request.json['numberDayOFF']
+    noteDayOFF = request.json['noteDayOFF']
+    reason = request.json['reason']
+    dataAddRequestOFF = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'numberDayOFF': numberDayOFF, 'startDayOFF': startDayOFF, 'noteDayOFF': noteDayOFF, 'reason': reason, 'idCensor': idCensor}
+    # return dataAddRequestOT
+
+    apiAddRequestOFF = InformationService.urlEmployeeRequest + '/addrequestOFF'
+
+    headers = {"Content-Type": "application/json"}
+    execute = requests.post(apiAddRequestOFF, data=json.dumps(dataAddRequestOFF), headers=headers)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Thêm thất bại'})
+    else:
+        return jsonify({'message':'Thêm thành công'})

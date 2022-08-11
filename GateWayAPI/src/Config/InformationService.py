@@ -1,4 +1,5 @@
 urlEmployeeInfor = 'https://employee-infor.herokuapp.com'
+urlEmployeeTask = 'https://employee-work.herokuapp.com'
 urlEmployeeRequest = 'https://employee-request.herokuapp.com'
 urlCompanyActivity = 'https://company-activity.herokuapp.com'
 urlDeviceRequest = 'https://device-request.herokuapp.com'

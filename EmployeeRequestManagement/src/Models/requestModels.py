@@ -19,6 +19,7 @@ class Request:
         self.requestDate = ''
         self.requestStatus = ''
         self.requestRejectReason = ''
+        self.typeName = ''
         self.active = ''
     def getRequest(self):
         return{
@@ -38,7 +39,8 @@ class Request:
             'reason':self.reason, 
             'requestDate':self.requestDate, 
             'requestStatus':self.requestStatus, 
-            'requestRejectReason':self.requestRejectReason, 
+            'requestRejectReason':self.requestRejectReason,
+            'typeName':self.typeName, 
             'active':self.active
         }
     
@@ -121,6 +123,24 @@ def readRequest(idEmployee, idRequestType):
         data.append(req)
     cursor.close()
     conn.close()
+    return data
+
+def listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest):
+    conn = connectDatabase.connect()
+    cursor = conn.cursor()
+    procedure = 'ListRequestByCensorshipId'
+    cursor.callproc(procedure, [idCensorship, pageIndex, pageSize, typeRequest,])
+    data = []
+    for result in cursor.stored_results():
+        for temp in result.fetchall():
+            r = Request()
+            r.id = temp[0]
+            r.requestName = temp[1]
+            r.reason = temp[2]
+            r.typeName = temp[3]
+            r.requestStatus = temp[4]
+            r.requestDate = temp[5]
+            data.append(r)
     return data
 
 class CheckinCheckout:

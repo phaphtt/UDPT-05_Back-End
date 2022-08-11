@@ -3,6 +3,18 @@ from src import app
 from flask import jsonify, request, Response
 from src.Models import requestModels
 
+
+@app.route('/listrequest/censorship', methods=['GET'])
+def requestListRequest():
+   idCensorship = request.args.get('idCensorship')
+   pageIndex = request.args.get('pageIndex')
+   pageSize = request.args.get('pageSize')
+   typeRequest = request.args.get('typeRequest')
+   data = requestModels.listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest)
+   return jsonify([e.getRequest() for e in data])
+   
+# http://127.0.0.1:5003/listrequest/censorship
+
 @app.route('/readrequest', methods=['GET'])
 def requestReadDetail():
    idEmployee = request.args.get('idEmployee')

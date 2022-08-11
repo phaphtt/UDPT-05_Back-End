@@ -12,7 +12,7 @@ from src.Config import InformationService
 def employeeDetail():
     idEmployee = request.args.get('idEmployee')
 
-    apiUrl_infor = InformationService.url + '/employee/information?idEmployee=' + idEmployee
+    apiUrl_infor = InformationService.urlEmployeeInfor + '/employee/information?idEmployee=' + idEmployee
 
     execute = requests.get(apiUrl_infor)
 
@@ -20,7 +20,7 @@ def employeeDetail():
         return jsonify({'message':'Gặp sự cố trong việc lấy thông tin nhân viên'})
     else:
         dic = execute.json()
-        apiUrl_department = InformationService.url + '/department/list'
+        apiUrl_department = InformationService.urlEmployeeInfor + '/department/list'
 
         execute = requests.get(apiUrl_department)
         if(execute.status_code != 200):
@@ -37,7 +37,7 @@ def listEmployee():
     pageIndex = request.args.get('pageIndex')
     pageSize = request.args.get('pageSize')
 
-    apiUrl = InformationService.url + '/listemployee?idManager=' + idManager + '&pageIndex=' + pageIndex + '&pageSize=' + pageSize
+    apiUrl = InformationService.urlEmployeeInfor + '/listemployee?idManager=' + idManager + '&pageIndex=' + pageIndex + '&pageSize=' + pageSize
 
     execute = requests.get(apiUrl)
 
@@ -50,9 +50,7 @@ def listEmployee():
 
 @app.route('/employee/update', methods=['PUT'])
 def employeeUpdate():
-    request.json['add'] = 'add'
-    apiUrl = InformationService.url + '/employee/update'
-
+    apiUrl = InformationService.urlEmployeeInfor + '/employee/update'
     headers = {"Content-Type": "application/json"}
     execute = requests.put(apiUrl, data=json.dumps(request.json), headers=headers)
 

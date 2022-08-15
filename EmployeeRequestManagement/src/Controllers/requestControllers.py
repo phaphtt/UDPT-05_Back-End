@@ -3,6 +3,28 @@ from src import app
 from flask import jsonify, request, Response
 from src.Models import requestModels
 
+
+@app.route('/listrequest/censorship', methods=['GET'])
+def requestListRequest():
+   idCensorship = request.args.get('idCensorship')
+   pageIndex = request.args.get('pageIndex')
+   pageSize = request.args.get('pageSize')
+   typeRequest = request.args.get('typeRequest')
+   data = requestModels.listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest)
+   return jsonify([e.getRequest() for e in data])
+
+@app.route('/request/detail', methods=['GET'])
+def requestDetailById():
+   idCensorship = request.args.get('idCensorship')
+   pageIndex = request.args.get('pageIndex')
+   pageSize = request.args.get('pageSize')
+   typeRequest = request.args.get('typeRequest')
+   idRequest = request.args.get('idRequest')
+   data = requestModels.requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
+   return jsonify(data)
+   
+# http://127.0.0.1:5003/listrequest/censorship
+
 @app.route('/readrequest', methods=['GET'])
 def requestReadDetail():
    idEmployee = request.args.get('idEmployee')
@@ -21,9 +43,14 @@ def requestOTAddDetail():
    hourOT = request.json['hourOT']
    dayOT = request.json['dayOT']
    reason = request.json['reason']
+   employeeFirstName = request.json['employeeFirstName'] 
+   employeeLastName = request.json['employeeLastName']
+   censorFirstName = request.json['censorFirstName']
+   censorLastName = request.json['censorLastName']
+   positionCensor = request.json['positionCensor']
 
    response = requestModels.Request()
-   response.addRequestOT(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason)
+   response.addRequestOT(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor)
    if (response):
       return "Thêm thành công"
    return "Thêm thất bại"

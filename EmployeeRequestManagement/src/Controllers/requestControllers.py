@@ -21,7 +21,6 @@ def requestDetailById():
    typeRequest = request.args.get('typeRequest')
    idRequest = request.args.get('idRequest')
    data = requestModels.requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
-   print(data)
    return jsonify(data)
    
 # http://127.0.0.1:5003/listrequest/censorship

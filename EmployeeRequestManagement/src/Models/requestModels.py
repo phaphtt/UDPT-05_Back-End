@@ -23,6 +23,7 @@ class Request:
         self.active = ''
         self.employeeFirstName = ''
         self.employeeLastName = ''
+        self.employeeLastName = '' 
         self.censorFirstName = ''
         self.censorLastName = ''
         self.positionCensor = ''
@@ -52,7 +53,8 @@ class Request:
             'censorFirstName':self.censorFirstName,
             'censorLastName':self.censorLastName,
             'positionCensor':self.positionCensor
-            
+
+
         }
     
     def addRequestWFH(self,idRequestType,idEmployee,idCensor, startDayWFH, endDayWFH, reason):
@@ -156,6 +158,8 @@ def listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest):
             r.typeName = temp[3]
             r.requestStatus = temp[4]
             r.requestDate = temp[5]
+            r.employeeFirstName = temp[6]
+            r.employeeLastName = temp[7]
             data.append(r)
     return data
 
@@ -178,6 +182,8 @@ def requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
                 r.typeName = temp[3]
                 r.requestStatus = temp[4]
                 r.requestDate = temp[5]
+                r.employeeFirstName = temp[6]
+                r.employeeLastName = temp[7]
                 listRequest.append(r)
         else:
             for temp in result.fetchall():
@@ -199,6 +205,12 @@ def requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
                 request.requestStatus = temp[15]
                 request.requestRejectReason = temp[16]
                 request.active = temp[17]
+                request.employeeFirstName = temp[18]
+                request.employeeLastName = temp[19]
+                request.censorFirstName = temp[20]
+                request.censorLastName = temp[21]
+                request.positionCensor = temp[22]
+                request.typeName = temp[23]
         i = i + 1
     
     data["listRequest"] = [e.getRequest() for e in listRequest]

@@ -33,9 +33,14 @@ def requestOTAddDetail():
    hourOT = request.json['hourOT']
    dayOT = request.json['dayOT']
    reason = request.json['reason']
+   employeeFirstName = request.json['employeeFirstName'] 
+   employeeLastName = request.json['employeeLastName']
+   censorFirstName = request.json['censorFirstName']
+   censorLastName = request.json['censorLastName']
+   positionCensor = request.json['positionCensor']
 
    response = requestModels.Request()
-   response.addRequestOT(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason)
+   response.addRequestOT(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor)
    if (response):
       return "Thêm thành công"
    return "Thêm thất bại"

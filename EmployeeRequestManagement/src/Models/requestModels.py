@@ -21,6 +21,11 @@ class Request:
         self.requestRejectReason = ''
         self.typeName = ''
         self.active = ''
+        self.employeeFirstName = ''
+        self.employeeLastName = ''
+        self.censorFirstName = ''
+        self.censorLastName = ''
+        self.positionCensor = ''
     def getRequest(self):
         return{
             'id':self.id,         
@@ -41,7 +46,13 @@ class Request:
             'requestStatus':self.requestStatus, 
             'requestRejectReason':self.requestRejectReason,
             'typeName':self.typeName, 
-            'active':self.active
+            'active':self.active,
+            'employeeFirstName':self.employeeFirstName,
+            'employeeLastName':self.employeeLastName,
+            'censorFirstName':self.censorFirstName,
+            'censorLastName':self.censorLastName,
+            'positionCensor':self.positionCensor
+            
         }
     
     def addRequestWFH(self,idRequestType,idEmployee,idCensor, startDayWFH, endDayWFH, reason):
@@ -65,11 +76,11 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOT(self, idRequestType, idEmployee, idCensor, hourOT, dayOT, reason):
+    def addRequestOT(self, idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName):
         conn = connectDatabase.connect()
 
         cursor = conn.cursor()
-        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate) values ({}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason))
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName) values ({}, {}, {}, {}, {}, {}, NOW(), {}, {}, {}, {})'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
@@ -119,6 +130,11 @@ def readRequest(idEmployee, idRequestType):
         req.requestStatus = t[15]
         req.requestRejectReason = t[16]
         req.active = t[17]
+        req.employeeFirstName = t[18]
+        req.employeeLastName = t[19]
+        req.censorFirstName = t[20]
+        req.censorLastName = t[21]
+        req.positionCensor = t[22]
 
         data.append(req)
     cursor.close()

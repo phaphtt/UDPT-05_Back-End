@@ -11,7 +11,7 @@ from src.Config import InformationService
 def employeeDetail():
     idEmployee = request.args.get('idEmployee')
 
-    apiUrl_infor = InformationService.url + '/employee/information?idEmployee=' + idEmployee
+    apiUrl_infor = InformationService.urlEmployeeInfor + '/employee/information?idEmployee=' + idEmployee
 
     execute = requests.get(apiUrl_infor)
 
@@ -19,7 +19,7 @@ def employeeDetail():
         return jsonify({'message':'Gặp sự cố trong việc lấy thông tin nhân viên'})
     else:
         dic = execute.json()
-        apiUrl_department = InformationService.url + '/department/list'
+        apiUrl_department = InformationService.urlEmployeeInfor + '/department/list'
 
         execute = requests.get(apiUrl_department)
         if(execute.status_code != 200):
@@ -36,7 +36,7 @@ def listEmployee():
     pageIndex = request.args.get('pageIndex')
     pageSize = request.args.get('pageSize')
 
-    apiUrl = InformationService.url + '/listemployee?idManager=' + idManager + '&pageIndex=' + pageIndex + '&pageSize=' + pageSize
+    apiUrl = InformationService.urlEmployeeInfor + '/listemployee?idManager=' + idManager + '&pageIndex=' + pageIndex + '&pageSize=' + pageSize
 
     execute = requests.get(apiUrl)
 
@@ -50,7 +50,7 @@ def listEmployee():
 @app.route('/employee/update', methods=['PUT'])
 def employeeUpdate():
     request.json['add'] = 'add'
-    apiUrl = InformationService.url + '/employee/update'
+    apiUrl = InformationService.urlEmployeeInfor + '/employee/update'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.put(apiUrl, data=json.dumps(request.json), headers=headers)
@@ -61,48 +61,50 @@ def employeeUpdate():
         return jsonify(1)
 
 #http://127.0.0.1:5001/employee/information?idEmployee=1
-@app.route('/employee/checkin_history', methods=['GET'])
-def listEmployeeCheckin():
-   idEmployee = request.args.get('idEmployee')
+# @app.route('/employee/checkin_history', methods=['GET'])
+# def listEmployeeCheckin():
+#    idEmployee = request.args.get('idEmployee')
 
-   apiUrl = InformationService.url + '/employee/checkin_history?idEmployee=' + idEmployee
+#    apiUrl = InformationService.urlEmployeeRequest + '/employee/checkin_history?idEmployee=' + idEmployee
 
-   execute = requests.get(apiUrl)
+#    execute = requests.get(apiUrl)
 
-   if(execute.status_code != 200):
-      return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
-   else:
-      dic = execute.json()
-      return dic
+#    if(execute.status_code != 200):
+#       return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
+#    else:
+#       dic = execute.json()
+#       return dic
 
-@app.route('/employee/addrequestWFH', methods=['GET'])
-def listEmployeeCheckin():
+@app.route('/employee/addrequestWFH', methods=['POST'])
+def addrequestWFH():
     idEmployee = request.json['idEmployee']
-    getCensorIdUrl = InformationService.url + '/getIdCensor?idEmployee=' + idEmployee
+    getCensorIdUrl = 'http://127.0.0.1:5004/getIdCensor?idEmployee=' + str(idEmployee)
     executeCensorId = requests.get(getCensorIdUrl)
-    idCensor = json.decoder(executeCensorId)
+    idCensor = executeCensorId.json()
+
     idRequestType = request.json['idRequestType']
     startDayWFH = request.json['startDayWFH']
     endDayWFH = request.json['endDayWFH']
     reason = request.json['reason']
+
     body = {
-        "idEmployee" : idEmployee,
-        "idRequestType" : idRequestType,
-        "idCensor" : idCensor,
-        "startDayWFH" : startDayWFH,
-        "endDayWFH" : endDayWFH,
-        "reason" : reason
-
+        'idEmployee' : idEmployee,
+        'idRequestType' : idRequestType,
+        'idCensor' : idCensor,
+        'startDayWFH' : startDayWFH,
+        'endDayWFH' : endDayWFH,
+        'reason' : reason
     }
-    apiUrl = InformationService.url + '/employee/addrequestWFH?idEmployee=' + idEmployee
 
-    execute = requests.get(apiUrl)
+    apiUrl = 'http://127.0.0.1:5003/employee/addrequestWFH'
+
+    headers = {"Content-Type": "application/json"}
+    execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)
 
     if(execute.status_code != 200):
-        return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
+        return jsonify({'message':'Thêm thất bại'})
     else:
-        dic = execute.json()
-        return dic
+        return jsonify({'message':'Thêm thành công'})
 
 # body: {
 #    "idEmployee" : 2,
@@ -111,7 +113,6 @@ def listEmployeeCheckin():
 #     "startDayWFH": "'2022-07-14'",
 #     "endDayWFH": "'2022-07-24'",
 #     "reason":"'cuoi vo'"
-# }
 # }
 
 @app.route('/employee/readrequest', methods=['GET'])

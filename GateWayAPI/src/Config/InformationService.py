@@ -1,4 +1,4 @@
-url = 'https://employee-infor.herokuapp.com'
+urlEmployeeInfor = 'https://employee-infor.herokuapp.com'
 urlEmployeeRequest = 'https://employee-request.herokuapp.com'
 from mysql.connector import (connection)
 def connect():

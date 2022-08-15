@@ -165,13 +165,15 @@ def getRequestEmployeeInfor (idEmployee):
     employeeInfor.close()
 
     nameManagerCursor = conn.cursor()
-    queryFindNameManager = ('SELECT firstName, lastName from Employee where id = {}'.format(idCensor))   
+    queryFindNameManager = ('SELECT firstName, lastName, position from Employee where id = {}'.format(idCensor))   
     nameManagerCursor.execute(queryFindNameManager)
     record = nameManagerCursor.fetchone() 
     firstNameManager = record[0]
     lastNameManager = record[1]
+    position = record[2]
     data.append(firstNameManager)
     data.append(lastNameManager)
+    data.append(position)
     nameManagerCursor.close()
 
     return data

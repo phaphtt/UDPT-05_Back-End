@@ -98,15 +98,15 @@ def requestReadDetail():
 @app.route('/employee/addrequestOT', methods=['POST'])
 def requestOTAddDetail():
     idEmployee = request.json['idEmployee']
-    # str(idEmployee) vì request.json nó đọc luôn kiểu dl post lên, còn request.args thì nó string sẵn
-    apiGetIdCensor = 'http://127.0.0.1:5004' + '/getIdCensor?idEmployee=' + str(idEmployee)
-    # apiGetIdCensor = InformationService.urlEmployeeInfor + '/getIdCensor?idEmployee=' + idEmployee
-    execute = requests.get(apiGetIdCensor)
-    if(execute.status_code != 200):
-        return jsonify({'message':'Không lấy được người kiểm duyệt của nhân viên có mã: ' + idEmployee})
-    else:
-        idCensor = execute.json()
-        # return str(idCensor)
+    # # str(idEmployee) vì request.json nó đọc luôn kiểu dl post lên, còn request.args thì nó string sẵn
+    # apiGetIdCensor = 'http://127.0.0.1:5004' + '/getIdCensor?idEmployee=' + str(idEmployee)
+    # # apiGetIdCensor = InformationService.urlEmployeeInfor + '/getIdCensor?idEmployee=' + idEmployee
+    # execute = requests.get(apiGetIdCensor)
+    # if(execute.status_code != 200):
+    #     return jsonify({'message':'Không lấy được người kiểm duyệt của nhân viên có mã: ' + idEmployee})
+    # else:
+    #     idCensor = execute.json()
+    #     # return str(idCensor)
 
     apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
     # apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
@@ -114,14 +114,20 @@ def requestOTAddDetail():
     if(execute.status_code != 200):
             return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
     else:
-        idCensor = execute.json()
-        # Đang ở đây nè
+        requestEmployeeInfor = execute.json()
 
+    employeeFirstName = requestEmployeeInfor[0]
+    employeeLastName = requestEmployeeInfor[1]
+    idCensor = requestEmployeeInfor[2]
+    censorFirstName = requestEmployeeInfor[3]
+    censorLastName = requestEmployeeInfor[4]
+    positionCensor = requestEmployeeInfor[5]
+    
     idRequestType = request.json['idRequestType']
     hourOT = request.json['hourOT']
     dayOT = request.json['dayOT']
     reason = request.json['reason']
-    dataAddRequestOT = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'hourOT': hourOT, 'dayOT': dayOT, 'reason': reason, 'idCensor': idCensor}
+    dataAddRequestOT = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'hourOT': hourOT, 'dayOT': dayOT, 'reason': reason, 'idCensor': idCensor, 'employeeFirstName': employeeFirstName, 'employeeLastName': employeeLastName, 'censorFirstName': censorFirstName, 'censorLastName': censorLastName, 'positionCensor': positionCensor}
     # return dataAddRequestOT
 
     apiAddRequestOT = InformationService.urlEmployeeRequest + '/addrequestOT'

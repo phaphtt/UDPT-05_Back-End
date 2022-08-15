@@ -1,5 +1,5 @@
 from src.Config import connectDatabase
-
+import json
 class Request:
     def __init__(self):
         self.id = 0
@@ -157,6 +157,52 @@ def listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest):
             r.requestStatus = temp[4]
             r.requestDate = temp[5]
             data.append(r)
+    return data
+
+def requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest):
+    conn = connectDatabase.connect()
+    cursor = conn.cursor()
+    procedure = 'RequestDetailByIdRequest'
+    cursor.callproc(procedure, [idCensorship, pageIndex, pageSize, typeRequest, idRequest,])
+    listRequest = []
+    request = Request()
+    data = {'listRequest':[], 'detailRequest':{}}
+    i = 0
+    for result in cursor.stored_results():
+        if(i == 0):
+            for temp in result.fetchall():
+                r = Request()
+                r.id = temp[0]
+                r.requestName = temp[1]
+                r.reason = temp[2]
+                r.typeName = temp[3]
+                r.requestStatus = temp[4]
+                r.requestDate = temp[5]
+                listRequest.append(r)
+        else:
+            for temp in result.fetchall():
+                request.id = temp[0]
+                request.idRequestType = temp[1]
+                request.idCheckinCheckOut = temp[2]
+                request.idEmployee = temp[3]
+                request.idCensor = temp[4]
+                request.requestName = temp[5]
+                request.hourOT = temp[6]
+                request.dayOT = temp[7]
+                request.startDayOFF = temp[8]
+                request.numberDayOFF = temp[9]
+                request.noteDayOFF = temp[10]
+                request.startDayWFH = temp[11]
+                request.endDayWFH = temp[12]
+                request.reason = temp[13]
+                request.requestDate = temp[14]
+                request.requestStatus = temp[15]
+                request.requestRejectReason = temp[16]
+                request.active = temp[17]
+        i = i + 1
+    
+    data["listRequest"] = [e.getRequest() for e in listRequest]
+    data["detailRequest"] = request.getRequest()
     return data
 
 class CheckinCheckout:

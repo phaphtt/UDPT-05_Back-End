@@ -4,7 +4,6 @@ from xmlrpc.client import ResponseError
 from src import app
 from xmlrpc.client import ResponseError
 from flask import jsonify, request, Response
-import json
 from src.Config import InformationService
 
 @app.route('/employee/listtask', methods=['GET'])

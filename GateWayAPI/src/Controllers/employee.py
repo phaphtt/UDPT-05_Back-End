@@ -127,8 +127,8 @@ def requestOTAddDetail():
     #     idCensor = execute.json()
     #     # return str(idCensor)
 
-    apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
-    # apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    #apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
     execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
             return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
@@ -150,6 +150,7 @@ def requestOTAddDetail():
     # return dataAddRequestOT
 
     apiAddRequestOT = InformationService.urlEmployeeRequest + '/addrequestOT'
+    # apiAddRequestOT = 'http://127.0.0.1:5003' + '/addrequestOT'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiAddRequestOT, data=json.dumps(dataAddRequestOT), headers=headers)

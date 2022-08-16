@@ -47,16 +47,16 @@ def listEmployee():
         dic = execute.json()
         return jsonify(dic)
 
-
-#http://127.0.0.1:5001/listrequest/censorship?idCensorship=1&pageIndex=0&pageSize=5&typeRequest=all
-@app.route('/listrequest/censorship', methods=['GET'])
-def listRequestCensorship():
+#http://127.0.0.1:5001/request/detail?idCensorship=1&pageIndex=0&pageSize=5&typeRequest=all&idRequest=9
+@app.route('/request/detail', methods=['GET'])
+def requestDetailById():
     idCensorship = request.args.get('idCensorship')
     pageIndex = request.args.get('pageIndex')
     typeRequest = request.args.get('typeRequest')
     pageSize = request.args.get('pageSize')
+    idRequest = request.args.get('idRequest')
 
-    apiUrl = InformationService.urlEmployeeRequest + '/listrequest/censorship?idCensorship=' + idCensorship + '&pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&typeRequest=' + typeRequest
+    apiUrl = InformationService.urlEmployeeRequest + '/request/detail?idCensorship=' + idCensorship + '&pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&typeRequest=' + typeRequest + '&idRequest=' + idRequest
 
     execute = requests.get(apiUrl)
 
@@ -70,14 +70,86 @@ def listRequestCensorship():
 @app.route('/employee/update', methods=['PUT'])
 def employeeUpdate():
     apiUrl = InformationService.urlEmployeeInfor + '/employee/update'
+
     headers = {"Content-Type": "application/json"}
     execute = requests.put(apiUrl, data=json.dumps(request.json), headers=headers)
 
     if(execute.status_code != 200):
-        return jsonify({'message':'Gặp sự cố trong việc cập nhật thông ti cá nhân'})
+        return jsonify({'message':'Gặp sự cố trong việc cập nhật thông tin cá nhân'})
     else:
         return jsonify(1)
 
+#http://127.0.0.1:5001/employee/information?idEmployee=1
+# @app.route('/employee/checkin_history', methods=['GET'])
+# def listEmployeeCheckin():
+#    idEmployee = request.args.get('idEmployee')
+
+#    apiUrl = InformationService.urlEmployeeRequest + '/employee/checkin_history?idEmployee=' + idEmployee
+
+#    execute = requests.get(apiUrl)
+
+#    if(execute.status_code != 200):
+#       return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
+#    else:
+#       dic = execute.json()
+#       return dic
+
+@app.route('/employee/addrequestWFH', methods=['POST'])
+def addrequestWFH():
+    idEmployee = request.json['idEmployee']
+
+    apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
+    # apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    execute = requests.get(apiRequestEmployeeInfor)
+    if(execute.status_code != 200):
+            return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
+    else:
+        requestEmployeeInfor = execute.json()
+
+    employeeFirstName = requestEmployeeInfor[0]
+    employeeLastName = requestEmployeeInfor[1]
+    idCensor = requestEmployeeInfor[2]
+    censorFirstName = requestEmployeeInfor[3]
+    censorLastName = requestEmployeeInfor[4]
+    positionCensor = requestEmployeeInfor[5]
+
+    idRequestType = request.json['idRequestType']
+    startDayWFH = request.json['startDayWFH']
+    endDayWFH = request.json['endDayWFH']
+    reason = request.json['reason']
+
+    body = {
+        'idEmployee' : idEmployee,
+        'idRequestType' : idRequestType,
+        'idCensor' : idCensor,
+        'startDayWFH' : startDayWFH,
+        'endDayWFH' : endDayWFH,
+        'reason' : reason,
+        'employeeFirstName' : employeeFirstName,
+        'employeeLastName' : employeeLastName,
+        'censorFirstName' : censorFirstName,
+        'censorLastName' : censorLastName,
+        'positionCensor' : positionCensor
+    }
+
+    apiUrl = 'http://127.0.0.1:5003/employee/addrequestWFH'
+
+    headers = {"Content-Type": "application/json"}
+    execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Thêm thất bại'})
+    else:
+        return jsonify({'message':'Thêm thành công'})
+
+# body: {
+#    "idEmployee" : 2,
+#     "idRequestType": 2,
+#     "idCensor": 3,
+#     "startDayWFH": "'2022-07-14'",
+#     "endDayWFH": "'2022-07-24'",
+#     "reason":"'cuoi vo'"
+# }
 
 @app.route('/employee/readrequest', methods=['GET'])
 def requestReadDetail():
@@ -98,24 +170,40 @@ def requestReadDetail():
 @app.route('/employee/addrequestOT', methods=['POST'])
 def requestOTAddDetail():
     idEmployee = request.json['idEmployee']
-    # str(idEmployee) vì request.json nó đọc luôn kiểu dl post lên, còn request.args thì nó string sẵn
-    apiGetIdCensor = 'http://127.0.0.1:5004' + '/getIdCensor?idEmployee=' + str(idEmployee)
-    # apiGetIdCensor = InformationService.urlEmployeeInfor + '/getIdCensor?idEmployee=' + idEmployee
-    execute = requests.get(apiGetIdCensor)
+    # # str(idEmployee) vì request.json nó đọc luôn kiểu dl post lên, còn request.args thì nó string sẵn
+    # apiGetIdCensor = 'http://127.0.0.1:5004' + '/getIdCensor?idEmployee=' + str(idEmployee)
+    # # apiGetIdCensor = InformationService.urlEmployeeInfor + '/getIdCensor?idEmployee=' + idEmployee
+    # execute = requests.get(apiGetIdCensor)
+    # if(execute.status_code != 200):
+    #     return jsonify({'message':'Không lấy được người kiểm duyệt của nhân viên có mã: ' + idEmployee})
+    # else:
+    #     idCensor = execute.json()
+    #     # return str(idCensor)
+
+    #apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
-        return jsonify({'message':'Không lấy được người kiểm duyệt của nhân viên có mã: ' + idEmployee})
+            return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
     else:
-        idCensor = execute.json()
-        # return str(idCensor)
-        
+        requestEmployeeInfor = execute.json()
+
+    employeeFirstName = requestEmployeeInfor[0]
+    employeeLastName = requestEmployeeInfor[1]
+    idCensor = requestEmployeeInfor[2]
+    censorFirstName = requestEmployeeInfor[3]
+    censorLastName = requestEmployeeInfor[4]
+    positionCensor = requestEmployeeInfor[5]
+    
     idRequestType = request.json['idRequestType']
     hourOT = request.json['hourOT']
     dayOT = request.json['dayOT']
     reason = request.json['reason']
-    dataAddRequestOT = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'hourOT': hourOT, 'dayOT': dayOT, 'reason': reason, 'idCensor': idCensor}
+    dataAddRequestOT = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'hourOT': hourOT, 'dayOT': dayOT, 'reason': reason, 'idCensor': idCensor, 'employeeFirstName': employeeFirstName, 'employeeLastName': employeeLastName, 'censorFirstName': censorFirstName, 'censorLastName': censorLastName, 'positionCensor': positionCensor}
     # return dataAddRequestOT
 
     apiAddRequestOT = InformationService.urlEmployeeRequest + '/addrequestOT'
+    # apiAddRequestOT = 'http://127.0.0.1:5003' + '/addrequestOT'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiAddRequestOT, data=json.dumps(dataAddRequestOT), headers=headers)
@@ -125,29 +213,36 @@ def requestOTAddDetail():
     else:
         return jsonify({'message':'Thêm thành công'})
 
-
-
 @app.route('/employee/addrequestOFF', methods=['POST'])
 def requestOFFAddDetail():
     idEmployee = request.json['idEmployee']
-    apiGetIdCensor = 'http://127.0.0.1:5004' + '/getIdCensor?idEmployee=' + str(idEmployee)
-    # apiGetIdCensor = InformationService.urlEmployeeInfor + '/getIdCensor?idEmployee=' + idEmployee
-    execute = requests.get(apiGetIdCensor)
+
+    #apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
-        return jsonify({'message':'Không lấy được người kiểm duyệt của nhân viên có mã: ' + idEmployee})
+            return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
     else:
-        idCensor = execute.json()
-        # return str(idCensor)
+        requestEmployeeInfor = execute.json()
         
+    employeeFirstName = requestEmployeeInfor[0]
+    employeeLastName = requestEmployeeInfor[1]
+    idCensor = requestEmployeeInfor[2]
+    censorFirstName = requestEmployeeInfor[3]
+    censorLastName = requestEmployeeInfor[4]
+    positionCensor = requestEmployeeInfor[5]
+
     idRequestType = request.json['idRequestType']
     startDayOFF = request.json['startDayOFF']
     numberDayOFF = request.json['numberDayOFF']
     noteDayOFF = request.json['noteDayOFF']
     reason = request.json['reason']
-    dataAddRequestOFF = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'numberDayOFF': numberDayOFF, 'startDayOFF': startDayOFF, 'noteDayOFF': noteDayOFF, 'reason': reason, 'idCensor': idCensor}
-    # return dataAddRequestOT
+    dataAddRequestOFF = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'numberDayOFF': numberDayOFF, 'startDayOFF': startDayOFF, 'noteDayOFF': noteDayOFF, 'reason': reason, 'idCensor': idCensor, 'employeeFirstName': employeeFirstName, 'employeeLastName': employeeLastName, 'censorFirstName': censorFirstName, 'censorLastName': censorLastName, 'positionCensor': positionCensor}
+    # return dataAddRequestOFF
 
     apiAddRequestOFF = InformationService.urlEmployeeRequest + '/addrequestOFF'
+    #apiAddRequestOFF = 'http://127.0.0.1:5003' + '/addrequestOFF'
+
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiAddRequestOFF, data=json.dumps(dataAddRequestOFF), headers=headers)

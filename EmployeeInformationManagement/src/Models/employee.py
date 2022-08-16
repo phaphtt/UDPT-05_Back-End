@@ -148,6 +148,37 @@ def getIdCensor (idEmployee):
     findIdCensor.close()
     return idCensor
     
+# This func is for EmployeeRequest service
+def getRequestEmployeeInfor (idEmployee):
+    conn = connectDatabase.connect()
+    employeeInfor = conn.cursor()
+    data=[]
+    queryFindIdManager = ('SELECT firstName, lastName, idManager from Employee where id = {}'.format(idEmployee))
+    employeeInfor.execute(queryFindIdManager)
+    record = employeeInfor.fetchone()
+    firstName = record[0]
+    lastName = record[1]
+    idCensor = record[2]
+    data.append(firstName)
+    data.append(lastName)
+    data.append(idCensor)
+    employeeInfor.close()
+
+    nameManagerCursor = conn.cursor()
+    queryFindNameManager = ('SELECT firstName, lastName, position from Employee where id = {}'.format(idCensor))   
+    nameManagerCursor.execute(queryFindNameManager)
+    record = nameManagerCursor.fetchone() 
+    firstNameManager = record[0]
+    lastNameManager = record[1]
+    position = record[2]
+    data.append(firstNameManager)
+    data.append(lastNameManager)
+    data.append(position)
+    nameManagerCursor.close()
+
+    return data
+
+
 class Request:
     def __init__(self):
         self.id = 0

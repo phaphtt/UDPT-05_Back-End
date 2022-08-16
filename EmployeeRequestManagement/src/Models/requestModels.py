@@ -21,6 +21,12 @@ class Request:
         self.requestRejectReason = ''
         self.typeName = ''
         self.active = ''
+        self.employeeFirstName = ''
+        self.employeeLastName = ''
+        self.employeeLastName = '' 
+        self.censorFirstName = ''
+        self.censorLastName = ''
+        self.positionCensor = ''
     def getRequest(self):
         return{
             'id':self.id,         
@@ -41,21 +47,29 @@ class Request:
             'requestStatus':self.requestStatus, 
             'requestRejectReason':self.requestRejectReason,
             'typeName':self.typeName, 
-            'active':self.active
+            'active':self.active,
+            'employeeFirstName':self.employeeFirstName,
+            'employeeLastName':self.employeeLastName,
+            'censorFirstName':self.censorFirstName,
+            'censorLastName':self.censorLastName,
+            'positionCensor':self.positionCensor
+
+
         }
+    def updateRequestByCensorship(self, idRequest, requestStatus, requestRejectReason):
+        conn = connectDatabase.connect()
+        cursor = conn.cursor()
+        procedure = 'UpdateStatusRequestByCensorship'
+        cursor.callproc(procedure, [idRequest, requestStatus, requestRejectReason,])
+        cursor.close()
+        conn.close()
+        return
     
-    def addRequestWFH(self,idRequestType,idEmployee,idCensor, startDayWFH, endDayWFH, reason):
+    def addRequestWFH(self,idRequestType,idEmployee,idCensor, startDayWFH, endDayWFH, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor):
         conn = connectDatabase.connect()
-        findIdCensor = conn.cursor()
-        queryFindIdManager = ('SELECT idManager from Employee where id = {}'.format(idEmployee))
-        findIdCensor.execute(queryFindIdManager)
-
-        record = findIdCensor.fetchone()
-        idCensor = record[0]
-        findIdCensor.close()
         
         cursor = conn.cursor()
-        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason) values ({}, {}, {}, {}, {}, {})'.format(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason))
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName) values ({}, {}, {}, {}, {}, {}, NOW(), "{}", "{}", "{}", "{}", "{}","Yêu cầu làm việc tại nhà")'.format(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
@@ -65,25 +79,27 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOT(self, idRequestType, idEmployee, idCensor, hourOT, dayOT, reason):
+    def addRequestOT(self, idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor):
         conn = connectDatabase.connect()
 
+        requestName = 'Yêu cầu xin làm thêm giờ'
         cursor = conn.cursor()
-        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate) values ({}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason))
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor) values ({}, {}, {}, {}, {}, {}, NOW(), "{}", "{}", "{}", "{}", "{}")'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
             conn.close()
             return True
-        cursor.close()
+        cursor.close()  
         conn.close()
         return False
 
-    def addRequestOFF(self,idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason):
+    def addRequestOFF(self,idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor):
         conn = connectDatabase.connect()
         
+        requestName = 'Yêu cầu xin nghỉ việc'
         cursor = conn.cursor()
-        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, requestDate) values ({}, {}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason))
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName) values ({}, {}, {}, {}, {}, {}, {}, NOW(), "{}", "{}", "{}", "{}", "{}", "{}")'.format(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
@@ -119,6 +135,11 @@ def readRequest(idEmployee, idRequestType):
         req.requestStatus = t[15]
         req.requestRejectReason = t[16]
         req.active = t[17]
+        req.employeeFirstName = t[18]
+        req.employeeLastName = t[19]
+        req.censorFirstName = t[20]
+        req.censorLastName = t[21]
+        req.positionCensor = t[22]
 
         data.append(req)
     cursor.close()
@@ -140,6 +161,8 @@ def listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest):
             r.typeName = temp[3]
             r.requestStatus = temp[4]
             r.requestDate = temp[5]
+            r.employeeFirstName = temp[6]
+            r.employeeLastName = temp[7]
             data.append(r)
     return data
 
@@ -162,6 +185,8 @@ def requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
                 r.typeName = temp[3]
                 r.requestStatus = temp[4]
                 r.requestDate = temp[5]
+                r.employeeFirstName = temp[6]
+                r.employeeLastName = temp[7]
                 listRequest.append(r)
         else:
             for temp in result.fetchall():
@@ -183,6 +208,12 @@ def requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
                 request.requestStatus = temp[15]
                 request.requestRejectReason = temp[16]
                 request.active = temp[17]
+                request.employeeFirstName = temp[18]
+                request.employeeLastName = temp[19]
+                request.censorFirstName = temp[20]
+                request.censorLastName = temp[21]
+                request.positionCensor = temp[22]
+                request.typeName = temp[23]
         i = i + 1
     
     data["listRequest"] = [e.getRequest() for e in listRequest]

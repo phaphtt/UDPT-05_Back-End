@@ -73,3 +73,9 @@ def getIdCensorInformation():
    data = employee.getIdCensor(idEmployee)
    return jsonify(data)
 
+@app.route('/getRequestEmployeeInfor', methods=['GET'])
+def getRequestEmployeeInfor():
+   idEmployee = request.args.get('idEmployee')
+   data = employee.getRequestEmployeeInfor(idEmployee)
+   return jsonify(data)
+

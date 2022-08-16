@@ -3,7 +3,7 @@ from src import app
 from flask import jsonify, request, Response
 from src.Models import requestModels
 
-
+# http://127.0.0.1:5003/listrequest/censorship
 @app.route('/listrequest/censorship', methods=['GET'])
 def requestListRequest():
    idCensorship = request.args.get('idCensorship')
@@ -21,10 +21,19 @@ def requestDetailById():
    typeRequest = request.args.get('typeRequest')
    idRequest = request.args.get('idRequest')
    data = requestModels.requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
-   print(data)
    return jsonify(data)
+
+
+@app.route('/request/update/censorship', methods=['PUT'])
+def requestUpdateByCensorship():
+   idRequest = request.json['idRequest']
+   requestStatus = request.json['requestStatus']
+   requestRejectReason = request.json['requestRejectReason']
+   r = requestModels.Request()
+   r.updateRequestByCensorship(idRequest, requestStatus, requestRejectReason)
+   return jsonify(1)
    
-# http://127.0.0.1:5003/listrequest/censorship
+
 
 @app.route('/readrequest', methods=['GET'])
 def requestReadDetail():
@@ -44,9 +53,14 @@ def requestOTAddDetail():
    hourOT = request.json['hourOT']
    dayOT = request.json['dayOT']
    reason = request.json['reason']
+   employeeFirstName = request.json['employeeFirstName']
+   employeeLastName = request.json['employeeLastName']
+   censorFirstName = request.json['censorFirstName']
+   censorLastName = request.json['censorLastName']
+   positionCensor = request.json['positionCensor']
 
    response = requestModels.Request()
-   response.addRequestOT(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason)
+   response.addRequestOT(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor)
    if (response):
       return "Thêm thành công"
    return "Thêm thất bại"
@@ -60,9 +74,14 @@ def requestOFFAddDetail():
    numberDayOFF = request.json['numberDayOFF']
    noteDayOFF = request.json['noteDayOFF']
    reason = request.json['reason']
+   employeeFirstName = request.json['employeeFirstName'] 
+   employeeLastName = request.json['employeeLastName']
+   censorFirstName = request.json['censorFirstName']
+   censorLastName = request.json['censorLastName']
+   positionCensor = request.json['positionCensor']
    
    response = requestModels.Request()
-   response.addRequestOFF(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason)
+   response.addRequestOFF(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor)
    if (response):
       return "Thêm thành công"
    return "Thêm thất bại"
@@ -78,9 +97,14 @@ def requestWFHAddDetail():
    startDayWFH = request.json['startDayWFH']
    endDayWFH = request.json['endDayWFH']
    reason = request.json['reason']
+   employeeFirstName = request.json['employeeFirstName']
+   employeeLastName = request.json['employeeLastName']
+   censorFirstName = request.json['censorFirstName']
+   censorLastName = request.json['censorLastName']
+   positionCensor = request.json['positionCensor']
 
    response = requestModels.Request()
-   response.addRequestWFH(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason)
+   response.addRequestWFH(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor)
    return {
       'message':'Thêm thành công'
    }

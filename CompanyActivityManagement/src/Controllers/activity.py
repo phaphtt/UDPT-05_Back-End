@@ -1,4 +1,5 @@
 from xmlrpc.client import ResponseError
+from ..Models.activity import Activity
 from src import app
 from xmlrpc.client import ResponseError
 from flask import jsonify, request, Response
@@ -19,9 +20,9 @@ def activityDetail():
    data = activity.ActivityInfor(activityId)
    return jsonify([e.getActivity() for e in data])
 
-#Test: http://127.0.0.1:5005/activity/search?activityName=gio GET
-@app.route('/activity/search', methods=['GET'])
+#Test: http://127.0.0.1:5005/activity/search POST
+@app.route('/activity/search', methods=['POST'])
 def activitySearch():
-   activityName = request.args.get('activityName')
-   data = activity.ActivitySearch(activityName)
-   return jsonify([e.getActivity() for e in data])
+   activityName = request.json['activityName']
+   dataA = activity.ActivitySearch(activityName)
+   return jsonify([e.getActivity() for e in dataA])

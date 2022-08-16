@@ -43,7 +43,7 @@ def requestOTAddDetail():
    hourOT = request.json['hourOT']
    dayOT = request.json['dayOT']
    reason = request.json['reason']
-   employeeFirstName = request.json['employeeFirstName'] 
+   employeeFirstName = request.json['employeeFirstName']
    employeeLastName = request.json['employeeLastName']
    censorFirstName = request.json['censorFirstName']
    censorLastName = request.json['censorLastName']
@@ -82,9 +82,14 @@ def requestWFHAddDetail():
    startDayWFH = request.json['startDayWFH']
    endDayWFH = request.json['endDayWFH']
    reason = request.json['reason']
+   employeeFirstName = request.json['employeeFirstName']
+   employeeLastName = request.json['employeeLastName']
+   censorFirstName = request.json['censorFirstName']
+   censorLastName = request.json['censorLastName']
+   positionCensor = request.json['positionCensor']
 
    response = requestModels.Request()
-   response.addRequestWFH(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason)
+   response.addRequestWFH(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor)
    return {
       'message':'Thêm thành công'
    }

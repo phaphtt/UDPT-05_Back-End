@@ -181,7 +181,7 @@ def requestOTAddDetail():
     #     # return str(idCensor)
 
     #apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
-    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
     execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
             return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
@@ -218,7 +218,7 @@ def requestOFFAddDetail():
     idEmployee = request.json['idEmployee']
 
     #apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
-    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
     execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
             return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})

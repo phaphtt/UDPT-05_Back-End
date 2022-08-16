@@ -84,7 +84,7 @@ class Request:
 
         requestName = 'Yêu cầu xin làm thêm giờ'
         cursor = conn.cursor()
-        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor) values ({}, {}, {}, {}, {}, {}, NOW(), "{}", "{}", "{}", "{}", "{}")'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor))
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName) values ({}, {}, {}, {}, {}, {}, NOW(), "{}", "{}", "{}", "{}", "{}", "{}")'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
@@ -112,7 +112,7 @@ class Request:
 def readRequest(idEmployee, idRequestType):
     conn = connectDatabase.connect()
     cursor = conn.cursor()
-    query = ('SELECT * FROM Request WHERE idEmployee = {} AND idRequestType = {}'.format(idEmployee, idRequestType))
+    query = ('SELECT * FROM Request WHERE active = 1 AND idEmployee = {} AND idRequestType = {}'.format(idEmployee, idRequestType))
     cursor.execute(query)
     data = []
     for t in cursor:

@@ -64,9 +64,14 @@ def requestOFFAddDetail():
    numberDayOFF = request.json['numberDayOFF']
    noteDayOFF = request.json['noteDayOFF']
    reason = request.json['reason']
+   employeeFirstName = request.json['employeeFirstName'] 
+   employeeLastName = request.json['employeeLastName']
+   censorFirstName = request.json['censorFirstName']
+   censorLastName = request.json['censorLastName']
+   positionCensor = request.json['positionCensor']
    
    response = requestModels.Request()
-   response.addRequestOFF(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason)
+   response.addRequestOFF(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor)
    if (response):
       return "Thêm thành công"
    return "Thêm thất bại"

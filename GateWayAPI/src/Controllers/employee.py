@@ -199,8 +199,8 @@ def requestOTAddDetail():
     #     idCensor = execute.json()
     #     # return str(idCensor)
 
-    apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
-    # apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    #apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
     execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
             return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
@@ -221,7 +221,8 @@ def requestOTAddDetail():
     dataAddRequestOT = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'hourOT': hourOT, 'dayOT': dayOT, 'reason': reason, 'idCensor': idCensor, 'employeeFirstName': employeeFirstName, 'employeeLastName': employeeLastName, 'censorFirstName': censorFirstName, 'censorLastName': censorLastName, 'positionCensor': positionCensor}
     # return dataAddRequestOT
 
-    apiAddRequestOT = 'http://127.0.0.1:5003/addrequestOT'
+    apiAddRequestOT = InformationService.urlEmployeeRequest + '/addrequestOT'
+    # apiAddRequestOT = 'http://127.0.0.1:5003' + '/addrequestOT'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiAddRequestOT, data=json.dumps(dataAddRequestOT), headers=headers)
@@ -234,24 +235,33 @@ def requestOTAddDetail():
 @app.route('/employee/addrequestOFF', methods=['POST'])
 def requestOFFAddDetail():
     idEmployee = request.json['idEmployee']
-    apiGetIdCensor = 'http://127.0.0.1:5004' + '/getIdCensor?idEmployee=' + str(idEmployee)
-    # apiGetIdCensor = InformationService.urlEmployeeInfor + '/getIdCensor?idEmployee=' + idEmployee
-    execute = requests.get(apiGetIdCensor)
+
+    #apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
-        return jsonify({'message':'Không lấy được người kiểm duyệt của nhân viên có mã: ' + idEmployee})
+            return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
     else:
-        idCensor = execute.json()
-        # return str(idCensor)
+        requestEmployeeInfor = execute.json()
         
+    employeeFirstName = requestEmployeeInfor[0]
+    employeeLastName = requestEmployeeInfor[1]
+    idCensor = requestEmployeeInfor[2]
+    censorFirstName = requestEmployeeInfor[3]
+    censorLastName = requestEmployeeInfor[4]
+    positionCensor = requestEmployeeInfor[5]
+
     idRequestType = request.json['idRequestType']
     startDayOFF = request.json['startDayOFF']
     numberDayOFF = request.json['numberDayOFF']
     noteDayOFF = request.json['noteDayOFF']
     reason = request.json['reason']
-    dataAddRequestOFF = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'numberDayOFF': numberDayOFF, 'startDayOFF': startDayOFF, 'noteDayOFF': noteDayOFF, 'reason': reason, 'idCensor': idCensor}
-    # return dataAddRequestOT
+    dataAddRequestOFF = {'idEmployee': idEmployee, 'idRequestType': idRequestType, 'numberDayOFF': numberDayOFF, 'startDayOFF': startDayOFF, 'noteDayOFF': noteDayOFF, 'reason': reason, 'idCensor': idCensor, 'employeeFirstName': employeeFirstName, 'employeeLastName': employeeLastName, 'censorFirstName': censorFirstName, 'censorLastName': censorLastName, 'positionCensor': positionCensor}
+    # return dataAddRequestOFF
 
     apiAddRequestOFF = InformationService.urlEmployeeRequest + '/addrequestOFF'
+    #apiAddRequestOFF = 'http://127.0.0.1:5003' + '/addrequestOFF'
+
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiAddRequestOFF, data=json.dumps(dataAddRequestOFF), headers=headers)

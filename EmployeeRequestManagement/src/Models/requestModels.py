@@ -74,6 +74,7 @@ class Request:
     def addRequestOT(self, idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor):
         conn = connectDatabase.connect()
 
+        requestName = 'Yêu cầu xin làm thêm giờ'
         cursor = conn.cursor()
         query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor) values ({}, {}, {}, {}, {}, {}, NOW(), "{}", "{}", "{}", "{}", "{}")'.format(idRequestType, idEmployee, idCensor, hourOT, dayOT, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor))
         cursor.execute(query)
@@ -85,11 +86,12 @@ class Request:
         conn.close()
         return False
 
-    def addRequestOFF(self,idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason):
+    def addRequestOFF(self,idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor):
         conn = connectDatabase.connect()
         
+        requestName = 'Yêu cầu xin nghỉ việc'
         cursor = conn.cursor()
-        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, requestDate) values ({}, {}, {}, {}, {}, {}, {}, NOW())'.format(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason))
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName) values ({}, {}, {}, {}, {}, {}, {}, NOW(), "{}", "{}", "{}", "{}", "{}", "{}")'.format(idRequestType, idEmployee, idCensor, startDayOFF, numberDayOFF, noteDayOFF, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()

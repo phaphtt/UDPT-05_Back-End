@@ -56,6 +56,14 @@ class Request:
 
 
         }
+    def updateRequestByCensorship(self, idRequest, requestStatus, requestRejectReason):
+        conn = connectDatabase.connect()
+        cursor = conn.cursor()
+        procedure = 'UpdateStatusRequestByCensorship'
+        cursor.callproc(procedure, [idRequest, requestStatus, requestRejectReason,])
+        cursor.close()
+        conn.close()
+        return
     
     def addRequestWFH(self,idRequestType,idEmployee,idCensor, startDayWFH, endDayWFH, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor):
         conn = connectDatabase.connect()

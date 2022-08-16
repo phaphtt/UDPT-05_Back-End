@@ -3,7 +3,7 @@ from src import app
 from flask import jsonify, request, Response
 from src.Models import requestModels
 
-
+# http://127.0.0.1:5003/listrequest/censorship
 @app.route('/listrequest/censorship', methods=['GET'])
 def requestListRequest():
    idCensorship = request.args.get('idCensorship')
@@ -22,8 +22,18 @@ def requestDetailById():
    idRequest = request.args.get('idRequest')
    data = requestModels.requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
    return jsonify(data)
+
+
+@app.route('/request/update/censorship', methods=['PUT'])
+def requestUpdateByCensorship():
+   idRequest = request.json['idRequest']
+   requestStatus = request.json['requestStatus']
+   requestRejectReason = request.json['requestRejectReason']
+   r = requestModels.Request()
+   r.updateRequestByCensorship(idRequest, requestStatus, requestRejectReason)
+   return jsonify(1)
    
-# http://127.0.0.1:5003/listrequest/censorship
+
 
 @app.route('/readrequest', methods=['GET'])
 def requestReadDetail():

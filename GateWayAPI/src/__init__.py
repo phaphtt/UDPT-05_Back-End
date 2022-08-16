@@ -9,3 +9,4 @@ from src.Controllers import department
 from src.Controllers import activity
 from src.Controllers import deviceRequest
 from src.Controllers import task
+from src.Controllers import censorship

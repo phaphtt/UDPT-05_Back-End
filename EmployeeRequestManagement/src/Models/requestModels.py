@@ -27,6 +27,7 @@ class Request:
         self.censorFirstName = ''
         self.censorLastName = ''
         self.positionCensor = ''
+        self.checkoutDate = ''
     def getRequest(self):
         return{
             'id':self.id,         
@@ -52,9 +53,8 @@ class Request:
             'employeeLastName':self.employeeLastName,
             'censorFirstName':self.censorFirstName,
             'censorLastName':self.censorLastName,
-            'positionCensor':self.positionCensor
-
-
+            'positionCensor':self.positionCensor,
+            'checkoutDate':self.checkoutDate
         }
     def updateRequestByCensorship(self, idRequest, requestStatus, requestRejectReason):
         conn = connectDatabase.connect()
@@ -214,6 +214,7 @@ def requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
                 request.censorLastName = temp[21]
                 request.positionCensor = temp[22]
                 request.typeName = temp[23]
+                request.checkoutDate = temp[24]
         i = i + 1
     
     data["listRequest"] = [e.getRequest() for e in listRequest]

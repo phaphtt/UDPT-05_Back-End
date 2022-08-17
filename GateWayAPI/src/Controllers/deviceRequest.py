@@ -83,15 +83,19 @@ def ListAllDeviceRequest():
         dic = execute.json()
         return jsonify(dic)
     
-#http://127.0.0.1:5001/deviceRequest/listdeviceRequestByStatus?requestStatus=Đang chờ duyệt
-@app.route('/deviceRequest/listdeviceRequestByStatus', methods=['GET'])
+#http://127.0.0.1:5001/deviceRequest/listdeviceRequestByStatus
+@app.route('/deviceRequest/listdeviceRequestByStatus', methods=['POST'])
 def ListdeviceRequestByStatus():
-    requestStatus = request.args.get('requestStatus')
-    apiUrl = InformationService.urlDeviceRequest + '/deviceRequest/listdeviceRequestByStatus?requestStatus=' + requestStatus
+    requestStatus = request.json['requestStatus']
+    dataFollow = {'requestStatus': requestStatus}
+    apiUrl = InformationService.urlDeviceRequest + '/deviceRequest/listdeviceRequestByStatus'
     execute = requests.get(apiUrl)
 
+    headers = {"Content-Type": "application/json"}
+    execute = requests.post(apiUrl, data=json.dumps(dataFollow), headers=headers)
+    
     if(execute.status_code != 200):
-        return jsonify({'message':'Gặp sự cố trong việc tìm kiếm danh sách yêu cầu thiết bị'})
+        return jsonify({'message':'Gặp sự cố khi tìm kiếm đơn yêu cầu'})
     else:
         dic = execute.json()
         return jsonify(dic)

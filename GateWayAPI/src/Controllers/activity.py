@@ -33,12 +33,14 @@ def listActivityDetail():
         dic = execute.json()
         return jsonify(dic)
     
-#http://127.0.0.1:5001/activity/search?activityName=gio
-@app.route('/activity/search', methods=['GET'])
+#http://127.0.0.1:5001/activity/search POST
+@app.route('/activity/search', methods=['POST'])
 def activitySearch():
-    activityName = request.args.get('activityName')
-    apiUrl = InformationService.urlCompanyActivity + '/activity/search?activityName=' + activityName
-    execute = requests.get(apiUrl)
+    activityName = request.json['activityName']
+    dataFollow = {'activityName': activityName}
+    apiUrl = InformationService.urlCompanyActivity + '/activity/search'
+    headers = {"Content-Type": "application/json"}
+    execute = requests.post(apiUrl, data=json.dumps(dataFollow), headers=headers)
 
     if(execute.status_code != 200):
         return jsonify({'message':'Gặp sự cố trong việc tìm kiếm hoạt động'})

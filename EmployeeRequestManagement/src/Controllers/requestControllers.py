@@ -10,7 +10,8 @@ def requestListRequest():
    pageIndex = request.args.get('pageIndex')
    pageSize = request.args.get('pageSize')
    typeRequest = request.args.get('typeRequest')
-   data = requestModels.listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest)
+   requestStatus = request.args.get('requestStatus')
+   data = requestModels.listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest, requestStatus)
    return jsonify([e.getRequest() for e in data])
 
 @app.route('/request/detail', methods=['GET'])
@@ -19,8 +20,9 @@ def requestDetailById():
    pageIndex = request.args.get('pageIndex')
    pageSize = request.args.get('pageSize')
    typeRequest = request.args.get('typeRequest')
+   requestStatus = request.args.get('requestStatus')
    idRequest = request.args.get('idRequest')
-   data = requestModels.requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest)
+   data = requestModels.requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest, requestStatus)
    return jsonify(data)
 
 

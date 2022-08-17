@@ -47,26 +47,6 @@ def listEmployee():
         dic = execute.json()
         return jsonify(dic)
 
-#http://127.0.0.1:5001/request/detail?idCensorship=1&pageIndex=0&pageSize=5&typeRequest=all&idRequest=9
-@app.route('/request/detail', methods=['GET'])
-def requestDetailById():
-    idCensorship = request.args.get('idCensorship')
-    pageIndex = request.args.get('pageIndex')
-    typeRequest = request.args.get('typeRequest')
-    pageSize = request.args.get('pageSize')
-    idRequest = request.args.get('idRequest')
-
-    apiUrl = InformationService.urlEmployeeRequest + '/request/detail?idCensorship=' + idCensorship + '&pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&typeRequest=' + typeRequest + '&idRequest=' + idRequest
-
-    execute = requests.get(apiUrl)
-
-    if(execute.status_code != 200):
-        return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các yêu cầu'})
-    else:
-        dic = execute.json()
-        return jsonify(dic)
-
-
 @app.route('/employee/update', methods=['PUT'])
 def employeeUpdate():
     apiUrl = InformationService.urlEmployeeInfor + '/employee/update'

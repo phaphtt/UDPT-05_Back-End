@@ -146,11 +146,11 @@ def readRequest(idEmployee, idRequestType):
     conn.close()
     return data
 
-def listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest):
+def listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest, requestStatus):
     conn = connectDatabase.connect()
     cursor = conn.cursor()
     procedure = 'ListRequestByCensorshipId'
-    cursor.callproc(procedure, [idCensorship, pageIndex, pageSize, typeRequest,])
+    cursor.callproc(procedure, [idCensorship, pageIndex, pageSize, typeRequest, requestStatus,])
     data = []
     for result in cursor.stored_results():
         for temp in result.fetchall():
@@ -166,11 +166,11 @@ def listRequestCensorship(idCensorship, pageIndex, pageSize, typeRequest):
             data.append(r)
     return data
 
-def requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest):
+def requestDetailById(idCensorship, pageIndex, pageSize, typeRequest, idRequest, requestStatus):
     conn = connectDatabase.connect()
     cursor = conn.cursor()
     procedure = 'RequestDetailByIdRequest'
-    cursor.callproc(procedure, [idCensorship, pageIndex, pageSize, typeRequest, idRequest,])
+    cursor.callproc(procedure, [idCensorship, pageIndex, pageSize, typeRequest, idRequest, requestStatus,])
     listRequest = []
     request = Request()
     data = {'listRequest':[], 'detailRequest':{}}

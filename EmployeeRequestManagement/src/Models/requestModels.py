@@ -112,7 +112,7 @@ class Request:
 def readRequest(idEmployee, idRequestType):
     conn = connectDatabase.connect()
     cursor = conn.cursor()
-    query = ('SELECT * FROM Request WHERE active = 1 AND idEmployee = {} AND idRequestType = {}'.format(idEmployee, idRequestType))
+    query = ('SELECT * FROM Request WHERE active = 1 AND idEmployee = {} AND idRequestType = {} order by id desc'.format(idEmployee, idRequestType))
     cursor.execute(query)
     data = []
     for t in cursor:

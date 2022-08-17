@@ -44,12 +44,12 @@ def ListAllDeviceRequest():
    data = deviceRequest.list_all_DeviceRequest()
    return jsonify([t.getInformation() for t in data])
 
-#Test: http://127.0.0.1:5006/deviceRequest/listdeviceRequestByStatus?requestStatus=Đang chờ duyệt GET 
-@app.route('/deviceRequest/listdeviceRequestByStatus', methods=['GET'])
+#Test: http://127.0.0.1:5006/deviceRequest/listdeviceRequestByStatus POST 
+@app.route('/deviceRequest/listdeviceRequestByStatus', methods=['POST'])
 def ListdeviceRequestByStatus():
-   requestStatus = request.args.get('requestStatus')
-   data = deviceRequest.list_DeviceRequestByStatus(requestStatus)
-   return jsonify([t.getInformation() for t in data])
+   requestStatus =  request.json['requestStatus']
+   dataA = deviceRequest.list_DeviceRequestByStatus(requestStatus)
+   return jsonify([e.getInformation() for e in dataA])
 
 #Test: http://127.0.0.1:5006/deviceRequest/update_form/ITManager POST
 # {

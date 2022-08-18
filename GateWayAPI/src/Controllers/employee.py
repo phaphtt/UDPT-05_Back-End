@@ -60,26 +60,13 @@ def employeeUpdate():
         return jsonify(1)
 
 #http://127.0.0.1:5001/employee/information?idEmployee=1
-# @app.route('/employee/checkin_history', methods=['GET'])
-# def listEmployeeCheckin():
-#    idEmployee = request.args.get('idEmployee')
-
-#    apiUrl = InformationService.urlEmployeeRequest + '/employee/checkin_history?idEmployee=' + idEmployee
-
-#    execute = requests.get(apiUrl)
-
-#    if(execute.status_code != 200):
-#       return jsonify({'message':'Gặp sự cố trong việc lấy danh sách các vaccine'})
-#    else:
-#       dic = execute.json()
-#       return dic
 
 @app.route('/employee/addrequestWFH', methods=['POST'])
 def addrequestWFH():
     idEmployee = request.json['idEmployee']
 
-    apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
-    # apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    # apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
     execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
             return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
@@ -113,6 +100,7 @@ def addrequestWFH():
     }
 
     apiUrl = 'http://127.0.0.1:5003/employee/addrequestWFH'
+    apiUrl = InformationService.urlEmployeeRequest + '/employee/addrequestWFH'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)
@@ -126,8 +114,8 @@ def addrequestWFH():
 def addrequestCheckoutLate():
     idEmployee = request.json['idEmployee']
 
-    apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
-    # apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    # apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
     execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
             return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
@@ -158,7 +146,8 @@ def addrequestCheckoutLate():
         'positionCensor' : positionCensor
     }
 
-    apiUrl = 'http://127.0.0.1:5003/employee/addrequestCheckoutLate'
+    # apiUrl = 'http://127.0.0.1:5003/employee/addrequestCheckoutLate'
+    apiUrl = InformationService.urlEmployeeInfor + '/employee/addrequestCheckoutLate'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)
@@ -181,8 +170,8 @@ def addrequestCheckoutLate():
 def requestReadDetail():
     idEmployee = request.args.get('idEmployee')
     idRequestType = request.args.get('idRequestType')
-    apiUrl =  'http://127.0.0.1:5004/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
-    # apiUrl =  InformationService.urlEmployeeRequest + '/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
+    # apiUrl =  'http://127.0.0.1:5004/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
+    apiUrl =  InformationService.urlEmployeeRequest + '/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
     execute = requests.get(apiUrl)
 
     if(execute.status_code != 200):
@@ -283,8 +272,8 @@ def CheckinHistoryList():
     idEmployee = request.args.get('idEmployee')
     pageno = request.args.get('pageno')
 
-    # apiUrl = InformationService.urlEmployeeRequest + '/employee/checkin_history?idEmployee=' + idEmployee
-    apiUrl = 'http://127.0.0.1:5003/employee/checkin_history?idEmployee=' + idEmployee + '&pageno=' + pageno
+    apiUrl = InformationService.urlEmployeeRequest + '/employee/checkin_history?idEmployee=' + idEmployee
+    # apiUrl = 'http://127.0.0.1:5003/employee/checkin_history?idEmployee=' + idEmployee + '&pageno=' + pageno
 
     execute = requests.get(apiUrl)
 
@@ -304,7 +293,8 @@ def addCheckin():
         'startTime' : startTime
     }
 
-    apiUrl = 'http://127.0.0.1:5003/employee/checkin'
+    # apiUrl = 'http://127.0.0.1:5003/employee/checkin'
+    apiUrl = InformationService.urlEmployeeRequest + '/employee/checkin'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)
@@ -322,7 +312,8 @@ def addCheckout():
         'idEmployee' : idEmployee
     }
 
-    apiUrl = 'http://127.0.0.1:5003/employee/checkout'
+    # apiUrl = 'http://127.0.0.1:5003/employee/checkout'
+    apiUrl = InformationService.urlEmployeeRequest + '/employee/checkout'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)

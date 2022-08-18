@@ -181,7 +181,8 @@ def addrequestCheckoutLate():
 def requestReadDetail():
     idEmployee = request.args.get('idEmployee')
     idRequestType = request.args.get('idRequestType')
-    apiUrl =  InformationService.urlEmployeeRequest + '/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
+    apiUrl =  'http://127.0.0.1:5004/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
+    # apiUrl =  InformationService.urlEmployeeRequest + '/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
     execute = requests.get(apiUrl)
 
     if(execute.status_code != 200):

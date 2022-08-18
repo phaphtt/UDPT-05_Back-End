@@ -122,6 +122,52 @@ def addrequestWFH():
     else:
         return jsonify({'message':'Thêm thành công'})
 
+@app.route('/employee/addrequestCheckoutLate', methods=['POST'])
+def addrequestCheckoutLate():
+    idEmployee = request.json['idEmployee']
+
+    apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
+    # apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    execute = requests.get(apiRequestEmployeeInfor)
+    if(execute.status_code != 200):
+            return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
+    else:
+        requestEmployeeInfor = execute.json()
+
+    employeeFirstName = requestEmployeeInfor[0]
+    employeeLastName = requestEmployeeInfor[1]
+    idCensor = requestEmployeeInfor[2]
+    censorFirstName = requestEmployeeInfor[3]
+    censorLastName = requestEmployeeInfor[4]
+    positionCensor = requestEmployeeInfor[5]
+
+    idRequestType = request.json['idRequestType']
+    checkoutDate = request.json['checkoutDate']
+    reason = request.json['reason']
+
+    body = {
+        'idEmployee' : idEmployee,
+        'idRequestType' : idRequestType,
+        'idCensor' : idCensor,
+        'checkoutDate' : checkoutDate,
+        'reason' : reason,
+        'employeeFirstName' : employeeFirstName,
+        'employeeLastName' : employeeLastName,
+        'censorFirstName' : censorFirstName,
+        'censorLastName' : censorLastName,
+        'positionCensor' : positionCensor
+    }
+
+    apiUrl = 'http://127.0.0.1:5003/employee/addrequestCheckoutLate'
+
+    headers = {"Content-Type": "application/json"}
+    execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Thêm thất bại'})
+    else:
+        return jsonify({'message':'Thêm thành công'})
+
 # body: {
 #    "idEmployee" : 2,
 #     "idRequestType": 2,
@@ -135,7 +181,7 @@ def addrequestWFH():
 def requestReadDetail():
     idEmployee = request.args.get('idEmployee')
     idRequestType = request.args.get('idRequestType')
-    apiUrl = InformationService.urlEmployeeRequest + '/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
+    apiUrl =  'http://127.0.0.1:5003/readrequest?idEmployee=' + idEmployee + '&idRequestType=' + idRequestType
     execute = requests.get(apiUrl)
 
     if(execute.status_code != 200):
@@ -223,7 +269,6 @@ def requestOFFAddDetail():
     apiAddRequestOFF = InformationService.urlEmployeeRequest + '/addrequestOFF'
     #apiAddRequestOFF = 'http://127.0.0.1:5003' + '/addrequestOFF'
 
-
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiAddRequestOFF, data=json.dumps(dataAddRequestOFF), headers=headers)
 
@@ -231,3 +276,57 @@ def requestOFFAddDetail():
         return jsonify({'message':'Thêm thất bại'})
     else:
         return jsonify({'message':'Thêm thành công'})
+
+@app.route('/employee/checkin_history', methods=['GET'])
+def CheckinHistoryList():
+    idEmployee = request.args.get('idEmployee')
+    pageno = request.args.get('pageno')
+
+    # apiUrl = InformationService.urlEmployeeRequest + '/employee/checkin_history?idEmployee=' + idEmployee
+    apiUrl = 'http://127.0.0.1:5003/employee/checkin_history?idEmployee=' + idEmployee + '&pageno=' + pageno
+
+    execute = requests.get(apiUrl)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Không lấy được danh sách yêu cầu'})
+    else:
+        dic = execute.json()
+        return jsonify(dic)
+
+@app.route('/employee/checkin', methods=['POST'])
+def addCheckin():
+    idEmployee = request.json['idEmployee']
+    startTime = request.json['startTime']
+    
+    body = {
+        'idEmployee' : idEmployee,
+        'startTime' : startTime
+    }
+
+    apiUrl = 'http://127.0.0.1:5003/employee/checkin'
+
+    headers = {"Content-Type": "application/json"}
+    execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Bạn đã checkin vào trước đó! Xin vui lòng thực hiện checkout.'})
+    else:
+        return jsonify({'message':'Thêm thành công'})
+
+@app.route('/employee/checkout', methods=['POST'])
+def addCheckout():
+    idEmployee = request.json['idEmployee']
+    
+    body = {
+        'idEmployee' : idEmployee
+    }
+
+    apiUrl = 'http://127.0.0.1:5003/employee/checkout'
+
+    headers = {"Content-Type": "application/json"}
+    execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)
+
+    if(execute.status_code != 200):
+        return jsonify({'message':'Bạn đã checkout vào trước đó! Xin vui lòng checkout vào ngày mai'})
+    else:
+        return jsonify({'message':'Checkout thành công'})

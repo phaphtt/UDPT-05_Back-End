@@ -1,5 +1,7 @@
 from src.Config import connectDatabase
 import json
+import datetime 
+
 class Request:
     def __init__(self):
         self.id = 0
@@ -69,7 +71,7 @@ class Request:
         conn = connectDatabase.connect()
         
         cursor = conn.cursor()
-        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName) values ({}, {}, {}, {}, {}, {}, NOW(), "{}", "{}", "{}", "{}", "{}","Yêu cầu làm việc tại nhà")'.format(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor))
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName) values ({}, {}, {}, "{}", "{}", "{}", NOW(), "{}", "{}", "{}", "{}", "{}","Yêu cầu làm việc tại nhà")'.format(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
@@ -109,6 +111,36 @@ class Request:
         conn.close()
         return False
 
+    def addRequestCheckoutLate(self,idRequestType, idEmployee, idCensor, checkoutDate, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor):
+        conn = connectDatabase.connect()
+        checkCheckoutCursor = conn.cursor()
+        checkCheckoutquery = ('SELECT COUNT(*) FROM CheckinCheckout WHERE idEmployee = {} AND status = "Chờ checkout" AND TIMESTAMPDIFF(HOUR, TIMESTAMP("{}"), NOW()) < 168 AND TIMESTAMPDIFF(HOUR, TIMESTAMP("{}"), NOW()) > 4'.format(idEmployee, checkoutDate, checkoutDate))
+        checkCheckoutCursor.execute(checkCheckoutquery)
+        recordCheckout = checkCheckoutCursor.fetchone()
+        countCheckout = recordCheckout[0]
+        checkCheckoutCursor.close()
+
+        checkRequestCursor = conn.cursor()
+        checkRequestquery = ('SELECT COUNT(*) FROM Request WHERE idEmployee = {} AND checkoutDate = "{}"'.format(idEmployee, checkoutDate))
+        checkRequestCursor.execute(checkRequestquery)
+        recordRequest = checkRequestCursor.fetchone()
+        countRequest = recordRequest[0]
+        checkRequestCursor.close()  
+
+        if((countCheckout==1) and (countRequest==0)):
+            cursor = conn.cursor()
+            query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, checkoutDate, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName) values ({}, {}, {}, "{}", "{}", NOW(), "{}", "{}", "{}", "{}", "{}","Yêu cầu xin checkout bù")'.format(idRequestType, idEmployee, idCensor, checkoutDate, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor))
+            cursor.execute(query)
+            if(conn.commit()):
+                cursor.close()
+                conn.close()
+                return True
+            cursor.close()
+            conn.close()
+            return False
+
+        return "Yêu cầu của bạn không hợp lệ!"
+
 def readRequest(idEmployee, idRequestType):
     conn = connectDatabase.connect()
     cursor = conn.cursor()
@@ -140,6 +172,7 @@ def readRequest(idEmployee, idRequestType):
         req.censorFirstName = t[20]
         req.censorLastName = t[21]
         req.positionCensor = t[22]
+        req.checkoutDate = t[23]
 
         data.append(req)
     cursor.close()
@@ -228,6 +261,7 @@ class CheckinCheckout:
         self.startTime = ''
         self.endTime = ''
         self.date = ''
+        self.status = ''
         self.active = ''
     def getCheckinHistory(self):
         return{
@@ -236,13 +270,30 @@ class CheckinCheckout:
             'startTime':self.startTime, 
             'endTime':self.endTime, 
             'date':self.date, 
+            'status':self.status,
             'active':self.active
         }
 
-    def addCheckin(self,idEmployee,startTime,date):
+    def addCheckin(self,idEmployee,startTime):
         conn = connectDatabase.connect()
+        curDate = datetime.date.today()
+
+        checkinCursor = conn.cursor()
+        checkinquery = ('SELECT COUNT(*) FROM CheckinCheckout WHERE idEmployee = {} AND date = "{}"'.format(idEmployee, curDate))
+        checkinCursor.execute(checkinquery)
+        recordcheckin = checkinCursor.fetchone()
+        countcheckin = recordcheckin[0]
+        checkinCursor.close()  
+
+        t  = datetime.datetime.now()
+        if(countcheckin > 0):
+            return False
+        
+        if(t.hour <= 8 or t.hour >= 16):
+            return False
+
         cursor = conn.cursor()
-        query = ('INSERT INTO CheckinCheckout (idEmployee, startTime, date) values ({}, {}, {})'.format(idEmployee, startTime, date))
+        query = ('INSERT INTO CheckinCheckout (idEmployee, startTime, date, status) values ({}, "{}", "{}","Chờ checkout")'.format(idEmployee, startTime, curDate))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
@@ -252,10 +303,25 @@ class CheckinCheckout:
         conn.close()
         return False
 
-    def addCheckout(self,idEmployee,endTime,date):
+    def addCheckout(self,idEmployee):
         conn = connectDatabase.connect()
+        curDate = datetime.date.today()
+        checkoutCursor = conn.cursor()
+        checkoutquery = ('SELECT COUNT(*) FROM CheckinCheckout WHERE idEmployee = {} AND date = "{}" AND status = "Chờ checkout"'.format(idEmployee, curDate))
+        checkoutCursor.execute(checkoutquery)
+        recordCheckout = checkoutCursor.fetchone()
+        countCheckout = recordCheckout[0]
+        checkoutCursor.close()  
+
+        t  = datetime.datetime.now()
+        if(countCheckout == 0):
+            return False
+
+        if(t.hour <= 16 or t.hour >= 20):
+            return False
+
         cursor = conn.cursor()
-        query = ('UPDATE CheckinCheckout SET endTime = {} WHERE idEmployee = {} AND date = {}'.format(endTime, idEmployee, date))
+        query = ('UPDATE CheckinCheckout SET endTime = "16:00:00", status = "Hoàn thành" WHERE idEmployee = {} AND date = "{}" AND status = "Chờ checkout"'.format(idEmployee, curDate))
         cursor.execute(query)
         if(conn.commit()):
             cursor.close()
@@ -265,10 +331,22 @@ class CheckinCheckout:
         conn.close()
         return False
 
-def employeeCheckinHistory(idEmployee):
+# def countCheckin():
+#     conn = connectDatabase.connect()
+#     cursor = conn.cursor()
+#     query = ('SELECT COUNT(*) FROM CheckinCheckout')
+#     cursor.execute(query)
+#     record = cursor.fetchone()
+#     data = record[0]
+#     cursor.close()
+#     conn.close()
+#     return data
+
+def employeeCheckinHistory(idEmployee, pageno):
     conn = connectDatabase.connect()
     cursor = conn.cursor()
-    query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
+    offset = (int(pageno)-1) * 10
+    query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {} LIMIT {},10'.format(idEmployee, offset))
     cursor.execute(query)
     data = []
     for t in cursor:
@@ -278,26 +356,11 @@ def employeeCheckinHistory(idEmployee):
         checkin.startTime = str(t[2])
         checkin.endTime = str(t[3])
         checkin.date = t[4]
-        checkin.active = t[5]
+        checkin.status = str(t[5])
+        checkin.active = t[6]
         data.append(checkin)
     cursor.close()
     conn.close()
     return data
 
 
-def employeeCheckinHistory(idEmployee):
-    conn = connectDatabase.connect()
-    cursor = conn.cursor()
-    query = ('SELECT * FROM CheckinCheckout WHERE idEmployee = {}'.format(idEmployee))
-    cursor.execute(query)
-    data = []
-    for t in cursor:
-        checkin = CheckinCheckout()
-        checkin.id = t[0]
-        checkin.idEmployee = t[1]
-        checkin.startTime = str(t[2])
-        checkin.endTime = str(t[3])
-        checkin.date = t[4]
-        checkin.active = t[5]
-        data.append(checkin)
-    return data

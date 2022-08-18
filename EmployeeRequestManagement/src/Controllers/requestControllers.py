@@ -107,40 +107,63 @@ def requestWFHAddDetail():
 
    response = requestModels.Request()
    response.addRequestWFH(idRequestType, idEmployee, idCensor, startDayWFH, endDayWFH, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor)
-   return {
-      'message':'Thêm thành công'
-   }
+   if (response):
+      return "Thêm thành công"
+   return "Thêm thất bại"
+
+@app.route('/employee/addrequestCheckoutLate', methods=['POST'])
+def requestCheckoutLateAddDetail():
+   idRequestType = request.json['idRequestType']
+   idEmployee = request.json['idEmployee']
+   idCensor = request.json['idCensor']
+   checkoutDate = request.json['checkoutDate']
+   reason = request.json['reason']
+   employeeFirstName = request.json['employeeFirstName']
+   employeeLastName = request.json['employeeLastName']
+   censorFirstName = request.json['censorFirstName']
+   censorLastName = request.json['censorLastName']
+   positionCensor = request.json['positionCensor']
+
+   response = requestModels.Request()
+   response.addRequestCheckoutLate(idRequestType, idEmployee, idCensor, checkoutDate, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor)
+   if (response):
+      return "Thêm thành công"
+   return "Thêm thất bại"
+
 
 @app.route('/employee/checkin_history', methods=['GET'])
 def checkinDetail():
    idEmployee = request.args.get('idEmployee')
-   data = requestModels.employeeCheckinHistory(idEmployee)
+   pageno = request.args.get('pageno')
+   data = requestModels.employeeCheckinHistory(idEmployee, pageno)
    return jsonify([e.getCheckinHistory() for e in data])
 
 # url: http://127.0.0.1:5003/employee/checkin_history?idEmployee=1
+
+# @app.route('/employee/countcheckin', methods=['GET'])
+# def countCheckin():
+#    data = requestModels.countCheckin()
+#    return jsonify([e.getRequest() for e in data])
 
 @app.route('/employee/checkin', methods=['POST'])
 def checkin():
    idEmployee = request.json['idEmployee']
    startTime = request.json['startTime']
-   date = request.json['date']
 
    response = requestModels.CheckinCheckout()
-   response.addCheckin(idEmployee,startTime,date)
-   return {
-      'message':'Thêm thành công'
-   }
+   response.addCheckin(idEmployee,startTime)
+   if (response):
+      return "Thêm thành công"
+   return "Thêm thất bại"
 
 # url: http://127.0.0.1:5003/employee/checkin
 
 @app.route('/employee/checkout', methods=['POST'])
 def checkout():
    idEmployee = request.json['idEmployee']
-   endTime = request.json['endTime']
-   date = request.json['date']
 
    response = requestModels.CheckinCheckout()
-   response.addCheckout(idEmployee,endTime,date)
-   return {
-      'message':'Cập nhật thành công'
-   }
+   response.addCheckout(idEmployee)
+   if (response):
+      return "Thêm thành công"
+   return "Thêm thất bại"

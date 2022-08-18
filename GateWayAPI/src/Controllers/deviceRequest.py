@@ -1,5 +1,3 @@
-from asyncio.windows_events import NULL
-from queue import Empty
 import requests
 from xmlrpc.client import ResponseError
 from src import app

@@ -1,4 +1,3 @@
-from operator import methodcaller
 import requests
 from xmlrpc.client import ResponseError
 from src import app

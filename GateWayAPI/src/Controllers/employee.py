@@ -1,4 +1,3 @@
-from operator import methodcaller
 import requests
 from xmlrpc.client import ResponseError
 from src import app
@@ -99,7 +98,7 @@ def addrequestWFH():
         'positionCensor' : positionCensor
     }
 
-    apiUrl = 'http://127.0.0.1:5003/employee/addrequestWFH'
+    
     apiUrl = InformationService.urlEmployeeRequest + '/employee/addrequestWFH'
 
     headers = {"Content-Type": "application/json"}

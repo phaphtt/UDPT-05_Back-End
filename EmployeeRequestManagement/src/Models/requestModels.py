@@ -289,7 +289,7 @@ class CheckinCheckout:
         if(countcheckin > 0):
             return False
         
-        if(t.hour <= 8 or t.hour >= 16):
+        if(t.hour <= 8 or t.hour >= 10):
             return False
 
         cursor = conn.cursor()

@@ -272,7 +272,7 @@ def CheckinHistoryList():
     idEmployee = request.args.get('idEmployee')
     pageno = request.args.get('pageno')
 
-    apiUrl = InformationService.urlEmployeeRequest + '/employee/checkin_history?idEmployee=' + idEmployee
+    apiUrl = InformationService.urlEmployeeRequest + '/employee/checkin_history?idEmployee=' + idEmployee + '&pageno=' + pageno
     # apiUrl = 'http://127.0.0.1:5003/employee/checkin_history?idEmployee=' + idEmployee + '&pageno=' + pageno
 
     execute = requests.get(apiUrl)

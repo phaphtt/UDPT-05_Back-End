@@ -145,8 +145,8 @@ def addrequestCheckoutLate():
         'positionCensor' : positionCensor
     }
 
-    apiUrl = 'http://127.0.0.1:5003/employee/addrequestCheckoutLate'
-    # apiUrl = InformationService.urlEmployeeInfor + '/employee/addrequestCheckoutLate'
+    # apiUrl = 'http://127.0.0.1:5003/employee/addrequestCheckoutLate'
+    apiUrl = InformationService.urlEmployeeRequest + '/employee/addrequestCheckoutLate'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)

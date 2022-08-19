@@ -114,11 +114,14 @@ class Request:
     def addRequestCheckoutLate(self,idRequestType, idEmployee, idCensor, checkoutDate, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor):
         conn = connectDatabase.connect()
         checkCheckoutCursor = conn.cursor()
-        checkCheckoutquery = ('SELECT COUNT(*) FROM CheckinCheckout WHERE idEmployee = {} AND status = "Chờ checkout" AND TIMESTAMPDIFF(HOUR, TIMESTAMP("{}"), NOW()) < 168 AND TIMESTAMPDIFF(HOUR, TIMESTAMP("{}"), NOW()) > 4'.format(idEmployee, checkoutDate, checkoutDate))
+        checkCheckoutquery = ('SELECT COUNT(*) FROM CheckinCheckout WHERE idEmployee = {} AND status = "Chờ checkout" AND date = "{}"'.format(idEmployee, checkoutDate))
         checkCheckoutCursor.execute(checkCheckoutquery)
         recordCheckout = checkCheckoutCursor.fetchone()
         countCheckout = recordCheckout[0]
         checkCheckoutCursor.close()
+
+        if(countCheckout==0):
+            return False
 
         checkRequestCursor = conn.cursor()
         checkRequestquery = ('SELECT COUNT(*) FROM Request WHERE idEmployee = {} AND checkoutDate = "{}"'.format(idEmployee, checkoutDate))
@@ -127,19 +130,19 @@ class Request:
         countRequest = recordRequest[0]
         checkRequestCursor.close()  
 
-        if((countCheckout==1) and (countRequest==0)):
-            cursor = conn.cursor()
-            query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, checkoutDate, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName) values ({}, {}, {}, "{}", "{}", NOW(), "{}", "{}", "{}", "{}", "{}","Yêu cầu xin checkout bù")'.format(idRequestType, idEmployee, idCensor, checkoutDate, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor))
-            cursor.execute(query)
-            if(conn.commit()):
-                cursor.close()
-                conn.close()
-                return True
-            cursor.close()
-            conn.close()
+        if(countRequest==1):
             return False
 
-        return "Yêu cầu của bạn không hợp lệ!"
+        cursor = conn.cursor()
+        query = ('INSERT INTO Request (idRequestType, idEmployee, idCensor, checkoutDate, reason, requestDate, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor, requestName) values ({}, {}, {}, "{}", "{}", NOW(), "{}", "{}", "{}", "{}", "{}","Yêu cầu xin checkout bù")'.format(idRequestType, idEmployee, idCensor, checkoutDate, reason, employeeFirstName, employeeLastName, censorFirstName, censorLastName, positionCensor))
+        cursor.execute(query)
+        if(conn.commit()):
+            cursor.close()
+            conn.close()
+            return True
+        cursor.close()
+        conn.close()
+        return False
 
 def readRequest(idEmployee, idRequestType):
     conn = connectDatabase.connect()

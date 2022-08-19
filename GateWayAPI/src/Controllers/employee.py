@@ -114,7 +114,7 @@ def addrequestCheckoutLate():
     idEmployee = request.json['idEmployee']
 
     # apiRequestEmployeeInfor = 'http://127.0.0.1:5004' + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
-    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + idEmployee
+    apiRequestEmployeeInfor = InformationService.urlEmployeeInfor + '/getRequestEmployeeInfor?idEmployee=' + str(idEmployee)
     execute = requests.get(apiRequestEmployeeInfor)
     if(execute.status_code != 200):
             return jsonify({'message':'Không lấy được thông tin nhân viên: ' + idEmployee})
@@ -145,8 +145,8 @@ def addrequestCheckoutLate():
         'positionCensor' : positionCensor
     }
 
-    # apiUrl = 'http://127.0.0.1:5003/employee/addrequestCheckoutLate'
-    apiUrl = InformationService.urlEmployeeInfor + '/employee/addrequestCheckoutLate'
+    apiUrl = 'http://127.0.0.1:5003/employee/addrequestCheckoutLate'
+    # apiUrl = InformationService.urlEmployeeInfor + '/employee/addrequestCheckoutLate'
 
     headers = {"Content-Type": "application/json"}
     execute = requests.post(apiUrl, data=json.dumps(body), headers=headers)
